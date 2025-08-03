@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const settingsButton = document.getElementById("settingsButton");
   const filterModal = document.getElementById("filterModal");
   const closeFilter = document.getElementById("closeFilter");
+  const docsLink = document.getElementById("docsLink");
   
   // Tab switching functionality - add this right after the other element declarations
   const upcomingTab = document.getElementById("upcomingTab");
@@ -317,6 +318,14 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) {
       console.error("Parse failed:", e);
     }
+  }
+
+  // Documentation link event
+  if (docsLink) {
+    docsLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: "https://yunkhngn.github.io/fptu-exam-calendar-exporter/" });
+    });
   }
 });
 
