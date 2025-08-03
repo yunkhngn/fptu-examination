@@ -140,15 +140,9 @@ Contributions are welcome! Please:
 ## Author
 
 **Developed with love by:**
-- [@yunkhngn](https://github.com/yunkhngn) - Developer & Designer
+- [@yunkhngn](https://github.com/yunkhngn) - Developer & Designer & Guitarist
 
-**I love FPTU** - Proud FPT University student
-
-## Support
-
-- **Bug Reports**: [GitHub Issues](https://github.com/yunkhngn/fptu-exam-calendar-exporter/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/yunkhngn/fptu-exam-calendar-exporter/discussions)
-- **Contact**: [Author's GitHub](https://github.com/yunkhngn)
+**I love FPTU** 
 
 ## License
 
