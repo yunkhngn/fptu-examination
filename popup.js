@@ -246,20 +246,51 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
             const cal = new ICS();
+            let validEventsCount = 0;
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            
             events.forEach(e => {
+              // Check if exam is upcoming (not completed)
+              const start = new Date(e.start);
+              const examDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+              const diffTime = examDate.getTime() - today.getTime();
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              
+              // Skip completed exams
+              if (diffDays < 0) {
+                return; // Skip past exams
+              }
+
+              // Skip exams without room number (not scheduled for retake)
+              // Only skip if location is explicitly empty, null, or contains "chưa có"
+              if (!e.location || 
+                  e.location.trim() === "" || 
+                  e.location.toLowerCase().includes("chưa có") ||
+                  e.location.toLowerCase().includes("chưa rõ") ||
+                  e.location.toLowerCase() === "tba" ||
+                  e.location.toLowerCase() === "to be announced") {
+                return; // Skip this exam
+              }
+
               let title = e.title;
            
               if (e.tag) {
                 title += ' - ' + e.tag;
               } else {
- 
                 if (/2nd_fe/i.test(e.description)) title += ' - 2NDFE';
                 else if (/practical_exam/i.test(e.description)) title += ' - PE';
                 else if (/multiple_choices|final|fe/i.test(e.description)) title += ' - FE';
               }
 
               cal.addEvent(title, e.description, e.location, new Date(e.start), new Date(e.end));
+              validEventsCount++;
             });
+
+            if (validEventsCount === 0) {
+              alert("Không có kỳ thi nào sắp tới và có phòng để xuất ra file .ics");
+              return;
+            }
 
             const blob = new Blob([cal.build()], { type: 'text/calendar' });
             const url = URL.createObjectURL(blob);
@@ -481,4 +512,4 @@ function createExamItem(e) {
     </div>
   `;
   return row;
-} 
+}
