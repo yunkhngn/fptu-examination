@@ -52,101 +52,63 @@ html, body {
 .exam-card {
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 16px;
+  padding: 20px;
   margin-bottom: 16px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 12px;
 }
 
 .exam-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 8px;
 }
 
 .exam-title {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16px;
   color: #1a1a1a;
-}
-
-.tag {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background-color: #e0f9e5;
-  color: #0c8c43;
-}
-
-.exam-description {
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.exam-line {
+  line-height: 1.4;
   display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: #4b5563;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
-.exam-line .label {
-  color: #9ca3af;
-  font-weight: 600;
+.exam-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.popup-actions {
-  text-align: center;
-  padding: 12px;
-  background-color: #ffffff;
-  border-top: 1px solid #e5e7eb;
-}
-
-#downloadButton {
-  padding: 8px 12px;
-  font-size: 13px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.popup-footer {
-  font-size: 11px;
-  text-align: center;
-  padding: 6px;
-  color: #9ca3af;
-}
-
-.popup-footer a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.loading,
-.error {
-  text-align: center;
-  padding: 16px;
+.exam-detail .line {
+  display: flex;
+  align-items: flex-start;
   font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
 }
 
-.error {
-  color: red;
+.exam-detail .line .label {
+  min-width: 100px;
+  color: #374151;
+  margin-right: 8px;
 }
 
 .tag {
   display: inline-block;
-  padding: 2px 6px;
+  padding: 4px 8px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 600;
   color: #fff;
-  margin-left: 6px;
+  margin-left: 2px;
+  white-space: nowrap;
 }
+
 .tag.fe {
   background-color: #4CAF50;
 }
@@ -213,13 +175,63 @@ html, body {
 }
 
 .tag.countdown.today {
-  background-color: #374151;
+  background-color: #ef4444;
 }
 
 .tag.countdown.tomorrow {
-  background-color: #4b5563;
+  background-color: #ef4444;
 }
 
 .tag.countdown.future {
-  background-color: #6b7280;
+  background-color: #10b981;
+}
+
+.tag.countdown.urgent {
+  background-color: #ef4444;
+}
+
+.popup-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.docs-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.docs-link:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.popup-footer {
+  font-size: 11px;
+  text-align: center;
+  padding: 8px 12px;
+  color: #9ca3af;
+  background-color: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.popup-footer a {
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.popup-footer a:hover {
+  text-decoration: underline;
 }

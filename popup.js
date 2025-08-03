@@ -217,7 +217,9 @@ function renderExamList(events) {
 
     // Calculate days remaining
     const now = new Date();
-    const diffTime = start.getTime() - now.getTime();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const examDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    const diffTime = examDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     const countdownTag = (() => {
@@ -227,6 +229,8 @@ function renderExamList(events) {
         return '<span class="tag countdown today">Hôm nay</span>';
       } else if (diffDays === 1) {
         return '<span class="tag countdown tomorrow">Ngày mai</span>';
+      } else if (diffDays <= 3) {
+        return `<span class="tag countdown urgent">Còn ${diffDays} ngày</span>`;
       } else {
         return `<span class="tag countdown future">Còn ${diffDays} ngày</span>`;
       }
