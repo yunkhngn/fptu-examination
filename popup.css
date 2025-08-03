@@ -136,3 +136,22 @@ html, body {
 .error {
   color: red;
 }
+
+.tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  margin-left: 6px;
+}
+.tag.fe {
+  background-color: #4CAF50;
+}
+.tag.pe {
+  background-color: #00BCD4;
+}
+.tag.secondfe {
+  background-color: #FF9800;
+}

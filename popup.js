@@ -1,3 +1,37 @@
+document.addEventListener("DOMContentLoaded", () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    const url = tabs[0].url;
+    if (url.includes("https://fap.fpt.edu.vn/Exam/ScheduleExams.aspx")) {
+      autoSyncSchedule();
+    }
+  });
+});
+
+function autoSyncSchedule() {
+  const loadingEl = document.querySelector(".loading");
+  const errorEl = document.querySelector(".error");
+
+  loadingEl.style.display = "block";
+  errorEl.style.display = "none";
+
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      files: ["content.js"]
+    }, () => {
+      chrome.tabs.sendMessage(tabs[0].id, { action: "extractSchedule" }, function (response) {
+        loadingEl.style.display = "none";
+        if (!response || !response.events) {
+          errorEl.style.display = "block";
+          return;
+        }
+        localStorage.setItem("examSchedule", JSON.stringify(response.events));
+        location.reload();
+      });
+    });
+  });
+}
+
 function renderExamList(events) {
   const examList = document.getElementById("examList");
   if (!examList) return;
@@ -9,6 +43,18 @@ function renderExamList(events) {
   }
 
   events.forEach(e => {
+    console.log("Event:", JSON.stringify(e, null, 2));
+    const desc = (e.description + ' ' + e.title).toLowerCase();
+    const examType = (e.examType || "").toLowerCase();
+    const tagType = (() => {
+      const tag = (e.tag || examType || "").toLowerCase();
+      if (tag.includes("2ndfe") || desc.includes("2ndfe") || desc.includes("2nd fe")) return "2NDFE";
+      if (tag.includes("2ndpe") || desc.includes("2ndpe") || desc.includes("2nd pe")) return "2NDPE";
+      if (tag === "pe" || desc.includes("practical_exam") || desc.includes("project presentation")) return "PE";
+      if (tag === "fe" || desc.includes("fe") || desc.includes("final") || desc.includes("multiple_choices") || desc.includes("speaking")) return "FE";
+      return null;
+    })();
+    console.log("→ Tag from content.js:", tagType);
     const row = document.createElement("div");
     row.className = "exam-item";
 
@@ -18,9 +64,10 @@ function renderExamList(events) {
     const formatDate = d => d.toLocaleDateString("vi-VN");
 
     const tag = (() => {
-      if (/practical_exam/i.test(e.description)) return '<span class="tag pe">PE</span>';
-      if (/2nd_fe/i.test(e.description)) return '<span class="tag 2ndfe">2NDFE</span>';
-      if (/multiple_choices|final/i.test(e.description)) return '<span class="tag fe">FE</span>';
+      if (tagType === "2NDFE") return '<span class="tag secondfe">2NDFE</span>';
+      if (tagType === "2NDPE") return '<span class="tag secondpe">2NDPE</span>';
+      if (tagType === "PE") return '<span class="tag pe">PE</span>';
+      if (tagType === "FE") return '<span class="tag fe">FE</span>';
       return '';
     })();
 
@@ -40,34 +87,13 @@ function renderExamList(events) {
     examList.appendChild(row);
   });
 }
-
-const syncButton = document.getElementById("syncBtn");
 const loadingEl = document.querySelector(".loading");
 const errorEl = document.querySelector(".error");
 
-if (syncButton && loadingEl && errorEl) {
-  syncButton.addEventListener("click", () => {
-    loadingEl.style.display = "block";
-    errorEl.style.display = "none";
+document.getElementById("syncButton").addEventListener("click", () => {
+  chrome.tabs.create({ url: "https://fap.fpt.edu.vn/Exam/ScheduleExams.aspx" });
+});
 
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.scripting.executeScript({
-        target: { tabId: tabs[0].id },
-        files: ["content.js"]
-      }, () => {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "extractSchedule" }, function (response) {
-          loadingEl.style.display = "none";
-          if (!response || !response.events) {
-            errorEl.style.display = "block";
-            return;
-          }
-          localStorage.setItem("examSchedule", JSON.stringify(response.events));
-          renderExamList(response.events);
-        });
-      });
-    });
-  });
-}
 
 document.getElementById("exportBtn").addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -131,9 +157,9 @@ document.getElementById("exportBtn").addEventListener("click", () => {
         const cal = new ICS();
         events.forEach(e => {
           let title = e.title;
-          if (/practical_exam/i.test(e.description)) title += ' - PE';
-          else if (/2nd_fe/i.test(e.description)) title += ' - 2NDFE';
-          else if (/multiple_choices|final/i.test(e.description)) title += ' - FE';
+          if (/2nd_fe/i.test(e.description)) title += ' - 2NDFE';
+          else if (/practical_exam/i.test(e.description)) title += ' - PE';
+          else if (/multiple_choices|final|fe/i.test(e.description)) title += ' - FE';
 
           cal.addEvent(title, e.description, e.location, new Date(e.start), new Date(e.end));
         });
