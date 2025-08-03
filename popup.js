@@ -215,6 +215,23 @@ function renderExamList(events) {
     const formatTime = d => d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
     const formatDate = d => d.toLocaleDateString("vi-VN");
 
+    // Calculate days remaining
+    const now = new Date();
+    const diffTime = start.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    const countdownTag = (() => {
+      if (diffDays < 0) {
+        return '<span class="tag countdown past">Đã thi</span>';
+      } else if (diffDays === 0) {
+        return '<span class="tag countdown today">Hôm nay</span>';
+      } else if (diffDays === 1) {
+        return '<span class="tag countdown tomorrow">Ngày mai</span>';
+      } else {
+        return `<span class="tag countdown future">Còn ${diffDays} ngày</span>`;
+      }
+    })();
+
     const tag = (() => {
       if (tagType === "2NDFE") return '<span class="tag secondfe">2NDFE</span>';
       if (tagType === "2NDPE") return '<span class="tag secondpe">2NDPE</span>';
@@ -226,13 +243,13 @@ function renderExamList(events) {
     row.innerHTML = `
       <div class="exam-card">
         <div class="exam-header">
-          <div class="exam-title">${e.title} ${tag}</div>
-          <div class="exam-desc">${e.description}</div>
+          <div class="exam-title">${e.title} ${tag} ${countdownTag}</div>
         </div>
         <div class="exam-detail">
-          <div class="line"><span class="label room">Phòng:</span> ${e.location || "Chưa rõ"}</div>
-          <div class="line"><span class="label date">Ngày thi:</span> ${formatDate(start)}</div>
-          <div class="line"><span class="label time">Thời gian:</span> ${formatTime(start)} - ${formatTime(end)}</div>
+          <div class="line"><span class="label method"><strong>Phương thức:</strong></span> ${e.description || "Chưa rõ"}</div>
+          <div class="line"><span class="label room"><strong>Phòng:</strong></span> ${e.location || "Chưa rõ"}</div>
+          <div class="line"><span class="label date"><strong>Ngày thi:</strong></span> ${formatDate(start)}</div>
+          <div class="line"><span class="label time"><strong>Thời gian:</strong></span> ${formatTime(start)} - ${formatTime(end)}</div>
         </div>
       </div>
     `;
