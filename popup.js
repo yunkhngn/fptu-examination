@@ -82,4 +82,31 @@ document.getElementById("exportBtn").addEventListener("click", () => {
       });
     });
   });
+  const syncButton = document.getElementById("syncBtn");
+  const loadingEl = document.querySelector(".loading");
+  const errorEl = document.querySelector(".error");
+
+  if (syncButton && loadingEl && errorEl) {
+    syncButton.addEventListener("click", () => {
+      loadingEl.style.display = "block";
+      errorEl.style.display = "none";
+
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.scripting.executeScript({
+          target: { tabId: tabs[0].id },
+          files: ["content.js"]
+        }, () => {
+          chrome.tabs.sendMessage(tabs[0].id, { action: "extractSchedule" }, function (response) {
+            loadingEl.style.display = "none";
+            if (!response || !response.events) {
+              errorEl.style.display = "block";
+              return;
+            }
+            localStorage.setItem("examSchedule", JSON.stringify(response.events));
+            location.reload();
+          });
+        });
+      });
+    });
+  }
 });

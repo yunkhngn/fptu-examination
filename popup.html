@@ -11,7 +11,7 @@
     <header class="popup-header">
       <h1>Lịch thi FPTU</h1>
       <div class="popup-controls">
-        <button id="syncButton" title="Đồng bộ lại lịch thi">🔄</button>
+        <button id="syncBtn" title="Đồng bộ lại lịch thi">🔄</button>
         <button id="settingsButton" title="Cài đặt hiển thị">⚙️</button>
       </div>
     </header>
@@ -20,6 +20,10 @@
       <div class="loading">Đang tải lịch thi...</div>
       <div class="error" style="display: none;">Không thể tải lịch thi. Vui lòng thử lại sau.</div>
     </section>
+
+    <div class="popup-actions">
+      <button id="exportBtn" title="Tải xuống file .ics">📥 Tải file .ics</button>
+    </div>
 
     <footer class="popup-footer">
       <p>Tiện ích bởi <a href="https://github.com/yunkhngn" target="_blank">@yunkhngn</a></p>
