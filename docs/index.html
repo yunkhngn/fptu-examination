@@ -1,11 +1,350 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FPTU Examination - Tiện ích lịch thi FPT University</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Tiện ích Chrome giúp sinh viên FPT University xuất lịch thi từ hệ thống FAP ra file .ics">
 </head>
 <body>
-    hello
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="hero-icon">📅</div>
+                    <h1>FPTU Examination</h1>
+                    <p class="hero-subtitle">Tiện ích Chrome hiện đại cho sinh viên FPT University</p>
+                    <p class="hero-description">Trích xuất và quản lý lịch thi từ hệ thống FAP một cách dễ dàng</p>
+                    <div class="hero-buttons">
+                        <a href="#download" class="btn-primary">Tải về miễn phí</a>
+                        <a href="#guide" class="btn-secondary">Hướng dẫn sử dụng</a>
+                    </div>
+                </div>
+                <div class="hero-preview">
+                    <div class="extension-mockup">
+                        <div class="mockup-header">
+                            <h3>📅 FPTU Examination</h3>
+                            <div class="mockup-controls">
+                                <button>Đồng bộ</button>
+                                <button>Lọc</button>
+                            </div>
+                        </div>
+                        <div class="mockup-tabs">
+                            <div class="tab active">📅 Chưa thi (9)</div>
+                            <div class="tab">✅ Đã thi (7)</div>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="exam-card">
+                                <div class="exam-title">PRJ301 <span class="tag secondfe">2NDFE</span> <span class="tag urgent">Còn 2 ngày</span></div>
+                                <div class="exam-info">
+                                    <div><strong>Phương thức:</strong> Multiple_choices on EOS</div>
+                                    <div><strong>Phòng:</strong> Chưa rõ</div>
+                                    <div><strong>Ngày thi:</strong> 6/8/2025</div>
+                                    <div><strong>Thời gian:</strong> 12:50 - 14:20</div>
+                                </div>
+                            </div>
+                            <div class="exam-card">
+                                <div class="exam-title">JPD123 <span class="tag secondfe">2NDFE</span> <span class="tag urgent">Còn 3 ngày</span></div>
+                                <div class="exam-info">
+                                    <div><strong>Phương thức:</strong> Speaking</div>
+                                    <div><strong>Phòng:</strong> Chưa rõ</div>
+                                    <div><strong>Ngày thi:</strong> 7/8/2025</div>
+                                    <div><strong>Thời gian:</strong> 08:00 - 10:00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mockup-actions">
+                            <button class="export-btn">📅 Tải xuống lịch .ics</button>
+                            <button class="docs-btn">📖 Hướng dẫn</button>
+                        </div>
+                        <div class="mockup-footer">
+                            <p>💛 FPTU • Phát triển bởi @yunkhngn • GitHub</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="features">
+        <div class="container">
+            <h2>Tính năng nổi bật</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Quản lý thông minh</h3>
+                    <p>Phân chia rõ ràng kỳ thi sắp tới và đã hoàn thành với hệ thống tab hiện đại</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>Đếm ngược thời gian</h3>
+                    <p>Hiển thị số ngày còn lại với mã màu trực quan: đỏ (khẩn cấp), xanh (an toàn)</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏷️</div>
+                    <h3>Phân loại tự động</h3>
+                    <p>Tự động nhận diện loại kỳ thi: FE, PE, 2NDFE, 2NDPE với màu sắc riêng biệt</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Bộ lọc thông minh</h3>
+                    <p>Lọc theo loại kỳ thi, lưu tùy chọn tự động với giao diện modal hiện đại</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Thiết kế hiện đại</h3>
+                    <p>Giao diện Material Design, responsive, dark mode tự động theo hệ thống</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <h3>Xuất lịch thông minh</h3>
+                    <p>Chỉ xuất kỳ thi sắp tới có phòng xác định, tương thích với mọi ứng dụng lịch</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="download">
+        <div class="container">
+            <h2>Tải về và cài đặt</h2>
+            <div class="download-options">
+                <div class="download-card">
+                    <h3>Chrome Web Store</h3>
+                    <p>Cài đặt dễ dàng với một cú nhấp chuột (Khuyến nghị)</p>
+                    <div class="store-badge">Đã có sẵn</div>
+                    <p>Cài đặt trực tiếp từ Chrome Web Store, tự động cập nhật</p>
+                    <a href="https://chromewebstore.google.com/detail/fptu-exam-to-calendar/obiiippodjlfcmdipfbkneknbakjekfm" class="btn-primary" target="_blank">Cài đặt từ Chrome Web Store</a>
+                </div>
+                <div class="download-card">
+                    <h3>Cài đặt thủ công</h3>
+                    <p>Dành cho người dùng muốn trải nghiệm phiên bản phát triển</p>
+                    <ol>
+                        <li>Tải về mã nguồn từ GitHub</li>
+                        <li>Mở chrome://extensions/</li>
+                        <li>Bật "Developer mode"</li>
+                        <li>Chọn "Load unpacked" và chọn thư mục extension</li>
+                    </ol>
+                    <a href="https://github.com/yunkhngn/fptu-exam-calendar-exporter" class="btn-secondary" target="_blank">Tải từ GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="guide" class="guide">
+        <div class="container">
+            <h2>Hướng dẫn sử dụng</h2>
+            <div class="guide-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Truy cập hệ thống FAP</h3>
+                        <p>Mở <code>https://fap.fpt.edu.vn/Exam/ScheduleExams.aspx</code> và đăng nhập bằng tài khoản sinh viên FPT</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Mở extension</h3>
+                        <p>Nhấn vào icon extension trên thanh công cụ Chrome. Extension sẽ tự động tải lịch thi hoặc bạn có thể nhấn <strong>Sync</strong></p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Quản lý lịch thi</h3>
+                        <p>Xem kỳ thi sắp tới trong tab <strong>"Chưa thi"</strong>, lịch sử trong tab <strong>"Đã thi"</strong>. Sử dụng <strong>Filter</strong> để lọc theo loại kỳ thi</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Xuất lịch</h3>
+                        <p>Nhấn <strong>"Tải xuống lịch .ics"</strong> để tải file lịch. Mở file bằng ứng dụng lịch để import các kỳ thi sắp tới</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="guide-note">
+                <h3>Lưu ý quan trọng</h3>
+                <ul>
+                    <li>Extension chỉ xuất các kỳ thi <strong>sắp tới</strong> và có <strong>phòng thi xác định</strong></li>
+                    <li>Sau khi sync dữ liệu từ FAP, bạn có thể xuất lịch từ <strong>bất kỳ website nào</strong></li>
+                    <li>File .ics tương thích với Apple Calendar, Google Calendar, Outlook</li>
+                    <li>Tự động thiết lập nhắc nhở 1 ngày và 1 giờ trước kỳ thi</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="ics-guide">
+        <div class="container">
+            <h2>Hướng dẫn sử dụng file .ics</h2>
+            <p class="section-description">Sau khi tải file .ics, bạn có thể import vào các ứng dụng lịch phổ biến:</p>
+            
+            <div class="ics-methods">
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-icon">🍎</div>
+                        <h3>macOS - Apple Calendar</h3>
+                        <div class="method-steps">
+                            <p><strong>Cách 1: Mở trực tiếp (Khuyến nghị)</strong></p>
+                            <ol>
+                                <li>Double-click vào file <code>lich-thi.ics</code></li>
+                                <li>Apple Calendar sẽ tự động mở và hiển thị các sự kiện</li>
+                                <li>Chọn calendar muốn import và nhấn <strong>"Add All"</strong></li>
+                            </ol>
+                            
+                            <p><strong>Cách 2: Import thủ công</strong></p>
+                            <ol>
+                                <li>Mở Apple Calendar</li>
+                                <li>File → Import → Chọn file <code>lich-thi.ics</code></li>
+                                <li>Chọn calendar và nhấn <strong>"Import"</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-icon">📱</div>
+                        <h3>iPhone/iPad - Apple Calendar</h3>
+                        <div class="method-steps">
+                            <ol>
+                                <li>Gửi file .ics qua AirDrop, email hoặc iCloud</li>
+                                <li>Nhấn vào file .ics trong Mail hoặc Files</li>
+                                <li>Chọn <strong>"Add All"</strong> để thêm vào Calendar</li>
+                                <li>Các sự kiện sẽ xuất hiện trong ứng dụng Calendar</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-icon">📧</div>
+                        <h3>Google Calendar</h3>
+                        <div class="method-steps">
+                            <ol>
+                                <li>Mở <a href="https://calendar.google.com" target="_blank">Google Calendar</a></li>
+                                <li>Nhấn vào biểu tượng ⚙️ (Settings) → <strong>"Import & export"</strong></li>
+                                <li>Chọn <strong>"Select file from your computer"</strong></li>
+                                <li>Chọn file <code>lich-thi.ics</code> và calendar đích</li>
+                                <li>Nhấn <strong>"Import"</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-icon">📊</div>
+                        <h3>Microsoft Outlook</h3>
+                        <div class="method-steps">
+                            <p><strong>Outlook Desktop:</strong></p>
+                            <ol>
+                                <li>Mở Outlook → File → <strong>"Open & Export"</strong> → <strong>"Import/Export"</strong></li>
+                                <li>Chọn <strong>"Import an iCalendar (.ics) or vCalendar file"</strong></li>
+                                <li>Chọn file <code>lich-thi.ics</code></li>
+                                <li>Chọn <strong>"Import"</strong> hoặc <strong>"Open as New"</strong></li>
+                            </ol>
+                            
+                            <p><strong>Outlook Web (Outlook.com):</strong></p>
+                            <ol>
+                                <li>Mở <a href="https://outlook.com" target="_blank">Outlook.com</a></li>
+                                <li>Calendar → <strong>"Add calendar"</strong> → <strong>"Upload from file"</strong></li>
+                                <li>Chọn file .ics và nhấn <strong>"Import"</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-content">
+                        <div class="method-icon">🤖</div>
+                        <h3>Android - Google Calendar</h3>
+                        <div class="method-steps">
+                            <ol>
+                                <li>Import file .ics vào Google Calendar trên máy tính (theo hướng dẫn trên)</li>
+                                <li>Mở ứng dụng Google Calendar trên Android</li>
+                                <li>Đảm bảo đã đăng nhập cùng tài khoản Google</li>
+                                <li>Các sự kiện sẽ tự động đồng bộ</li>
+                            </ol>
+                            
+                            <p><strong>Hoặc sử dụng ứng dụng khác:</strong></p>
+                            <ul>
+                                <li>Samsung Calendar: Mở file .ics từ email hoặc file manager</li>
+                                <li>Any.do, Calendly: Import qua tính năng "Import calendar"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ics-tips">
+                <h3>💡 Mẹo hữu ích</h3>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <h4>🔔 Nhắc nhở tự động</h4>
+                        <p>File .ics đã tích hợp sẵn nhắc nhở 1 ngày và 1 giờ trước kỳ thi. Bạn có thể tùy chỉnh thêm trong ứng dụng lịch.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🔄 Cập nhật lịch thi</h4>
+                        <p>Khi có thay đổi lịch thi, tải file .ics mới và import lại. Các sự kiện cũ sẽ được cập nhật hoặc thay thế.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>🎨 Tùy chỉnh màu sắc</h4>
+                        <p>Sau khi import, bạn có thể đặt màu riêng cho calendar "FPTU Examination" để dễ phân biệt.</p>
+                    </div>
+                    <div class="tip-card">
+                        <h4>📱 Đồng bộ đa thiết bị</h4>
+                        <p>Import vào iCloud, Google hoặc Outlook để lịch thi tự động đồng bộ trên tất cả thiết bị của bạn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="container">
+            <h2>Câu hỏi thường gặp</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Extension có an toàn không?</h3>
+                    <p>Hoàn toàn an toàn. Extension chỉ đọc dữ liệu lịch thi công khai trên FAP, không thu thập thông tin cá nhân.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Tại sao một số kỳ thi không được xuất?</h3>
+                    <p>Extension chỉ xuất các kỳ thi sắp tới và có phòng thi xác định. Các kỳ thi chưa có phòng (thường là chưa cần thi lại) sẽ không được bao gồm.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Extension có hoạt động trên mobile không?</h3>
+                    <p>Extension chỉ hoạt động trên Chrome desktop. Tuy nhiên, file .ics xuất ra có thể mở trên mọi thiết bị.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Làm sao để cập nhật lịch thi mới?</h3>
+                    <p>Truy cập lại trang FAP và nhấn nút Sync trong extension để tải dữ liệu mới nhất.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>📅 FPTU Examination</h3>
+                    <p>I 💛 FPTU - Tôi yêu FPT University</p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/yunkhngn/fptu-exam-calendar-exporter" target="_blank">GitHub</a>
+                    <a href="https://github.com/yunkhngn" target="_blank">@yunkhngn</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Phát triển bởi <a href="https://github.com/yunkhngn" target="_blank">@yunkhngn</a></p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
