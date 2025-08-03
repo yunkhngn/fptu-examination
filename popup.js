@@ -168,145 +168,136 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (exportBtn) {
     exportBtn.addEventListener("click", () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        if (!tabs || !tabs[0]) return;
-        
-        chrome.scripting.executeScript({
-          target: { tabId: tabs[0].id },
-          files: ["content.js"]
-        }, (results) => {
-          if (chrome.runtime.lastError) {
-            console.error('Script injection failed:', chrome.runtime.lastError);
-            alert("Không thể chạy script trên trang này.");
-            return;
-          }
-          
-          chrome.tabs.sendMessage(tabs[0].id, { action: "extractSchedule" }, function (response) {
-            if (chrome.runtime.lastError) {
-              console.error('Message sending failed:', chrome.runtime.lastError);
-              alert("Không thể kết nối với trang web.");
-              return;
-            }
-            
-            if (!response || !response.events) {
-              alert("Không lấy được lịch thi.");
-              return;
-            }
+      // Get stored exam data instead of requiring FAP page
+      const storedData = localStorage.getItem("examSchedule");
+      
+      if (!storedData) {
+        alert("Chưa có dữ liệu lịch thi. Vui lòng truy cập trang FAP và nhấn Sync để tải dữ liệu.");
+        return;
+      }
 
-            const events = response.events;
+      let events;
+      try {
+        events = JSON.parse(storedData);
+      } catch (e) {
+        console.error("Parse stored data failed:", e);
+        alert("Dữ liệu lịch thi bị lỗi. Vui lòng sync lại từ trang FAP.");
+        return;
+      }
 
-            const ICS = function (uid = "fptu", prod = "exam-exporter") {
-              const SEPARATOR = '\r\n';
-              let eventsData = [];
-              const calendarStart = [
-                'BEGIN:VCALENDAR',
-                'VERSION:2.0',
-                'PRODID:' + prod,
-                'CALSCALE:GREGORIAN'
-              ].join(SEPARATOR);
-              const calendarEnd = 'END:VCALENDAR';
+      if (!events || !events.length) {
+        alert("Không có lịch thi nào để xuất.");
+        return;
+      }
 
-              return {
-                addEvent: function (title, desc, loc, start, end) {
-                  const now = new Date();
-                  const fmt = d => {
-                    let s = d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') + 'Z';
-                    if (s.endsWith('ZZ')) s = s.slice(0, -1);
-                    return s;
-                  };
-                  let stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') + 'Z';
-                  if (stamp.endsWith('ZZ')) stamp = stamp.slice(0, -1);
-                  const uidStr = fmt(now) + '-' + Math.random().toString(36).substring(2, 8) + '@' + prod;
-                  eventsData.push([
-                    'BEGIN:VEVENT',
-                    'UID:' + uidStr,
-                    'DTSTAMP:' + stamp,
-                    'DTSTART:' + fmt(start),
-                    'DTEND:' + fmt(end),
-                    'SUMMARY:' + title,
-                    'DESCRIPTION:' + desc,
-                    'LOCATION:' + loc,
-                    'BEGIN:VALARM',
-                    'TRIGGER:-P1D',
-                    'ACTION:DISPLAY',
-                    'DESCRIPTION:Nhắc nhở: Thi vào ngày mai',
-                    'END:VALARM',
-                    'BEGIN:VALARM',
-                    'TRIGGER:-PT1H',
-                    'ACTION:DISPLAY',
-                    'DESCRIPTION:Nhắc nhở: Thi trong 1 giờ nữa',
-                    'END:VALARM',
-                    'END:VEVENT'
-                  ].join(SEPARATOR));
-                },
-                build: function () {
-                  return calendarStart + SEPARATOR + eventsData.join(SEPARATOR) + SEPARATOR + calendarEnd;
-                }
-              };
-            };
+      const ICS = function (uid = "fptu", prod = "exam-exporter") {
+        const SEPARATOR = '\r\n';
+        let eventsData = [];
+        const calendarStart = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:' + prod,
+          'CALSCALE:GREGORIAN'
+        ].join(SEPARATOR);
+        const calendarEnd = 'END:VCALENDAR';
 
-            const cal = new ICS();
-            let validEventsCount = 0;
+        return {
+          addEvent: function (title, desc, loc, start, end) {
             const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            
-            events.forEach(e => {
-              // Check if exam is upcoming (not completed)
-              const start = new Date(e.start);
-              const examDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-              const diffTime = examDate.getTime() - today.getTime();
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-              
-              // Skip completed exams
-              if (diffDays < 0) {
-                return; // Skip past exams
-              }
+            const fmt = d => {
+              let s = d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') + 'Z';
+              if (s.endsWith('ZZ')) s = s.slice(0, -1);
+              return s;
+            };
+            let stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') + 'Z';
+            if (stamp.endsWith('ZZ')) stamp = stamp.slice(0, -1);
+            const uidStr = fmt(now) + '-' + Math.random().toString(36).substring(2, 8) + '@' + prod;
+            eventsData.push([
+              'BEGIN:VEVENT',
+              'UID:' + uidStr,
+              'DTSTAMP:' + stamp,
+              'DTSTART:' + fmt(start),
+              'DTEND:' + fmt(end),
+              'SUMMARY:' + title,
+              'DESCRIPTION:' + desc,
+              'LOCATION:' + loc,
+              'BEGIN:VALARM',
+              'TRIGGER:-P1D',
+              'ACTION:DISPLAY',
+              'DESCRIPTION:Nhắc nhở: Thi vào ngày mai',
+              'END:VALARM',
+              'BEGIN:VALARM',
+              'TRIGGER:-PT1H',
+              'ACTION:DISPLAY',
+              'DESCRIPTION:Nhắc nhở: Thi trong 1 giờ nữa',
+              'END:VALARM',
+              'END:VEVENT'
+            ].join(SEPARATOR));
+          },
+          build: function () {
+            return calendarStart + SEPARATOR + eventsData.join(SEPARATOR) + SEPARATOR + calendarEnd;
+          }
+        };
+      };
 
-              // Skip exams without room number (not scheduled for retake)
-              // Only skip if location is explicitly empty, null, or contains "chưa có"
-              if (!e.location || 
-                  e.location.trim() === "" || 
-                  e.location.toLowerCase().includes("chưa có") ||
-                  e.location.toLowerCase().includes("chưa rõ") ||
-                  e.location.toLowerCase() === "tba" ||
-                  e.location.toLowerCase() === "to be announced") {
-                return; // Skip this exam
-              }
+      const cal = new ICS();
+      let validEventsCount = 0;
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      events.forEach(e => {
+        // Check if exam is upcoming (not completed)
+        const start = new Date(e.start);
+        const examDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+        const diffTime = examDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Skip completed exams
+        if (diffDays < 0) {
+          return; // Skip past exams
+        }
 
-              let title = e.title;
-           
-              if (e.tag) {
-                title += ' - ' + e.tag;
-              } else {
-                if (/2nd_fe/i.test(e.description)) title += ' - 2NDFE';
-                else if (/practical_exam/i.test(e.description)) title += ' - PE';
-                else if (/multiple_choices|final|fe/i.test(e.description)) title += ' - FE';
-              }
+        // Skip exams without room number (not scheduled for retake)
+        if (!e.location || 
+            e.location.trim() === "" || 
+            e.location.toLowerCase().includes("chưa có") ||
+            e.location.toLowerCase().includes("chưa rõ") ||
+            e.location.toLowerCase() === "tba" ||
+            e.location.toLowerCase() === "to be announced") {
+          return; // Skip this exam
+        }
 
-              cal.addEvent(title, e.description, e.location, new Date(e.start), new Date(e.end));
-              validEventsCount++;
-            });
+        let title = e.title;
+     
+        if (e.tag) {
+          title += ' - ' + e.tag;
+        } else {
+          if (/2nd_fe/i.test(e.description)) title += ' - 2NDFE';
+          else if (/practical_exam/i.test(e.description)) title += ' - PE';
+          else if (/multiple_choices|final|fe/i.test(e.description)) title += ' - FE';
+        }
 
-            if (validEventsCount === 0) {
-              alert("Không có kỳ thi nào sắp tới và có phòng để xuất ra file .ics");
-              return;
-            }
-
-            const blob = new Blob([cal.build()], { type: 'text/calendar' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'lich-thi.ics');
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-              document.body.removeChild(a);
-              URL.revokeObjectURL(url);
-            }, 100);
-          });
-        });
+        cal.addEvent(title, e.description, e.location, new Date(e.start), new Date(e.end));
+        validEventsCount++;
       });
+
+      if (validEventsCount === 0) {
+        alert("Không có kỳ thi nào sắp tới và có phòng để xuất ra file .ics");
+        return;
+      }
+
+      const blob = new Blob([cal.build()], { type: 'text/calendar' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', 'lich-thi.ics');
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
     });
   }
 

@@ -1,107 +1,110 @@
 # FPTU Examination Calendar Exporter
 
-🎓 Extension Chrome hiện đại giúp sinh viên FPT University trích xuất và quản lý lịch thi một cách dễ dàng từ hệ thống FAP.
+A modern Chrome extension that helps FPT University students easily extract and manage their exam schedules from the FAP system.
 
-## ✨ Tính năng nổi bật
+## Key Features
 
-### 📅 Quản lý lịch thi thông minh
-- **Giao diện tab**: Phân chia rõ ràng giữa kỳ thi sắp tới và đã hoàn thành
-- **Đếm ngược thời gian**: Hiển thị số ngày còn lại đến kỳ thi với mã màu trực quan
-  - 🔴 **Khẩn cấp**: ≤ 3 ngày (màu đỏ)
-  - 🟢 **An toàn**: > 3 ngày (màu xanh)
-  - ⚫ **Đã thi**: Kỳ thi đã qua (màu xám)
+### Smart Exam Schedule Management
+- **Tab Interface**: Clear separation between upcoming and completed exams
+- **Countdown Timer**: Visual time remaining until exam with color coding
+  - **Urgent**: 3 days or less (red)
+  - **Safe**: More than 3 days (green)
+  - **Completed**: Past exams (gray)
 
-### 🏷️ Phân loại bài thi tự động
-- **FE** (Final Exam): Thi cuối kỳ
-- **PE** (Practical Exam): Thi thực hành  
-- **2NDFE** (Second Final Exam): Thi lại cuối kỳ
-- **2NDPE** (Second Practical Exam): Thi lại thực hành
+### Automatic Exam Classification
+- **FE** (Final Exam): End-of-term examinations
+- **PE** (Practical Exam): Practical/lab examinations
+- **2NDFE** (Second Final Exam): Final exam retakes
+- **2NDPE** (Second Practical Exam): Practical exam retakes
 
-### 🔍 Bộ lọc thông minh
-- Lọc theo loại kỳ thi (FE, PE, 2NDFE, 2NDPE)
-- Lưu tùy chọn lọc tự động
-- Giao diện modal hiện đại với các nút tiện ích
+### Smart Filtering System
+- Filter by exam type (FE, PE, 2NDFE, 2NDPE)
+- Automatic filter preference saving
+- Modern modal interface with utility buttons
 
-### 📱 Thiết kế hiện đại
-- Giao diện Material Design sạch sẽ
-- Responsive trên nhiều kích thước màn hình
-- Dark mode tự động theo hệ thống
-- Animation mượt mà
+### Modern Design
+- Clean Material Design interface
+- Responsive across different screen sizes
+- Automatic dark mode following system preferences
+- Smooth animations and transitions
 
-### 📤 Xuất lịch thông minh
-- **Chỉ xuất kỳ thi sắp tới** có phòng thi xác định
-- Tương thích với Apple Calendar, Google Calendar, Outlook
-- Nhắc nhở tự động:
-  - 🔔 1 ngày trước kỳ thi
-  - ⏰ 1 giờ trước kỳ thi
+### Intelligent Calendar Export
+- **Export only upcoming exams** with confirmed room assignments
+- Compatible with Apple Calendar, Google Calendar, Outlook
+- Automatic reminders:
+  - 1 day before exam
+  - 1 hour before exam
+- **Works from any website** using stored data
 
-## 🚀 Cài đặt
+## Installation
 
-### Cài đặt thủ công (Developer Mode)
+### Manual Installation (Developer Mode)
 1. **Clone repository**:
    ```bash
    git clone https://github.com/yunkhngn/fptu-exam-calendar-exporter.git
    ```
-2. **Mở Chrome Extensions**:
-   - Truy cập `chrome://extensions/`
-   - Bật **Developer mode** ở góc trên bên phải
+2. **Open Chrome Extensions**:
+   - Navigate to `chrome://extensions/`
+   - Enable **Developer mode** in the top right corner
 3. **Load extension**:
-   - Nhấn **Load unpacked**
-   - Chọn thư mục vừa clone
+   - Click **Load unpacked**
+   - Select the cloned folder
 
-### Cài đặt từ Chrome Web Store
-🔜 *Đang chờ review từ Google*
+### Chrome Web Store Installation
+Coming soon - pending Google review
 
-## 📖 Hướng dẫn sử dụng
+## Usage Guide
 
-### Bước 1: Truy cập hệ thống FAP
-1. Mở `https://fap.fpt.edu.vn/Exam/ScheduleExams.aspx`
-2. Đăng nhập bằng tài khoản sinh viên FPT
+### Step 1: Access FAP System
+1. Open `https://fap.fpt.edu.vn/Exam/ScheduleExams.aspx`
+2. Login with your FPT student account
 
-### Bước 2: Sử dụng Extension
-1. **Nhấn icon extension** trên thanh công cụ Chrome
-2. **Tự động đồng bộ**: Extension sẽ tự động tải lịch thi nếu đang ở trang FAP
-3. **Đồng bộ thủ công**: Nhấn nút **Sync** để tải lại dữ liệu
+### Step 2: Use Extension
+1. **Click extension icon** in Chrome toolbar
+2. **Auto-sync**: Extension automatically loads exam schedule when on FAP page
+3. **Manual sync**: Click **Sync** button to reload data
 
-### Bước 3: Quản lý lịch thi
-- **Xem kỳ thi sắp tới**: Tab "📅 Chưa thi"
-- **Xem lịch sử**: Tab "✅ Đã thi"  
-- **Lọc theo loại**: Nhấn **Filter** để chọn loại kỳ thi hiển thị
+### Step 3: Manage Exam Schedule
+- **View upcoming exams**: "Chưa thi" tab
+- **View exam history**: "Đã thi" tab
+- **Filter by type**: Click **Filter** to select exam types to display
 
-### Bước 4: Xuất lịch
-1. **Nhấn "📅 Tải xuống lịch .ics"**
-2. **Chờ file tải về**: `lich-thi.ics`
-3. **Import vào ứng dụng lịch**:
-   - **macOS**: Mở bằng Calendar
-   - **Windows**: Mở bằng Outlook
+### Step 4: Export Calendar
+1. **Click "Tải xuống lịch .ics"** button
+2. **Wait for download**: `lich-thi.ics` file
+3. **Import to calendar app**:
+   - **macOS**: Open with Calendar
+   - **Windows**: Open with Outlook
    - **Mobile**: Google Calendar, Apple Calendar
 
-## 🛠️ Công nghệ sử dụng
+Note: Calendar export works from any website using previously synced data.
+
+## Technology Stack
 
 - **Frontend**: Vanilla JavaScript, CSS3, HTML5
 - **Chrome APIs**: Tabs, Scripting, Storage
 - **Standards**: iCalendar (RFC 5545)
 - **Design**: Material Design principles
 
-## 🎨 Giao diện
+## Interface Design
 
 ### Light Theme
-- Màu chủ đạo: Xanh dương (#3b82f6)
-- Background: Trắng (#ffffff) 
-- Text: Xám đậm (#1f2937)
+- Primary color: Blue (#3b82f6)
+- Background: White (#ffffff)
+- Text: Dark gray (#1f2937)
 
 ### Component Design
-- **Cards**: Bo góc 12px, shadow nhẹ
-- **Buttons**: Hover effects, transition mượt
-- **Tags**: Rounded, color-coded theo loại thi
-- **Modal**: Overlay với backdrop blur
+- **Cards**: 12px border radius, subtle shadows
+- **Buttons**: Hover effects, smooth transitions
+- **Tags**: Rounded, color-coded by exam type
+- **Modal**: Overlay with backdrop blur
 
-## 🔧 Cấu trúc dự án
+## Project Structure
 
 ```
 fptu-exam-calendar-exporter/
 ├── manifest.json          # Extension manifest
-├── popup.html             # Main popup interface  
+├── popup.html             # Main popup interface
 ├── popup.css              # Styling
 ├── popup.js               # Main logic
 ├── content.js             # FAP page interaction
@@ -109,47 +112,48 @@ fptu-exam-calendar-exporter/
 └── README.md              # Documentation
 ```
 
-## 🤝 Đóng góp
+## Contributing
 
-Hoan nghênh mọi đóng góp! Vui lòng:
+Contributions are welcome! Please:
 
-1. **Fork** repository
-2. **Tạo branch** cho feature mới
-3. **Commit** thay đổi với message rõ ràng
-4. **Push** lên branch
-5. **Tạo Pull Request**
+1. **Fork** the repository
+2. **Create branch** for new feature
+3. **Commit** changes with clear messages
+4. **Push** to branch
+5. **Create Pull Request**
 
-## 📝 Changelog
+## Changelog
 
 ### v2.0.0 (2024)
-- ✨ Thêm hệ thống tab (Chưa thi/Đã thi)
-- ✨ Đếm ngược thời gian với mã màu
-- ✨ Bộ lọc theo loại kỳ thi
-- ✨ Giao diện Material Design mới
-- 🐛 Chỉ xuất kỳ thi sắp tới có phòng xác định
+- Added tab system (Upcoming/Completed exams)
+- Added countdown timer with color coding
+- Added exam type filtering system
+- New Material Design interface
+- Export only upcoming exams with confirmed rooms
+- Calendar export works from any website
 
 ### v1.0.0 (2024)
-- 🎉 Phiên bản đầu tiên
-- 📅 Xuất lịch thi cơ bản
-- 🏷️ Nhận diện loại bài thi
+- Initial release
+- Basic exam schedule export
+- Exam type recognition
 
-## ❤️ Tác giả
+## Author
 
-**Được phát triển với 💛 bởi:**
+**Developed with love by:**
 - [@yunkhngn](https://github.com/yunkhngn) - Developer & Designer
 
-**I 💛 FPTU** - *Tự hào sinh viên FPT University*
+**I love FPTU** - Proud FPT University student
 
-## 📞 Hỗ trợ
+## Support
 
-- 🐛 **Bug Report**: [GitHub Issues](https://github.com/yunkhngn/fptu-exam-calendar-exporter/issues)
-- 💡 **Feature Request**: [GitHub Discussions](https://github.com/yunkhngn/fptu-exam-calendar-exporter/discussions)
-- 📧 **Email**: [Liên hệ tác giả](https://github.com/yunkhngn)
+- **Bug Reports**: [GitHub Issues](https://github.com/yunkhngn/fptu-exam-calendar-exporter/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/yunkhngn/fptu-exam-calendar-exporter/discussions)
+- **Contact**: [Author's GitHub](https://github.com/yunkhngn)
 
-## 📄 License
+## License
 
-MIT License - Xem chi tiết trong file [LICENSE](LICENSE)
+MIT License - See [LICENSE](LICENSE) file for details
 
 ---
 
-⭐ **Nếu extension hữu ích, hãy star repository để ủng hộ tác giả!**
+**If this extension is helpful, please star the repository to support the author!**
