@@ -17,8 +17,21 @@
     </header>
 
     <section id="examList" class="popup-list">
+      <div class="tab-navigation">
+        <button id="upcomingTab" class="tab-btn active">📅 Chưa thi</button>
+        <button id="completedTab" class="tab-btn">✅ Đã thi</button>
+      </div>
+      
       <div class="loading">Đang tải lịch thi...</div>
       <div class="error" style="display: none;">Không thể tải lịch thi. Vui lòng thử lại sau.</div>
+      
+      <div id="upcomingExams" class="tab-content active">
+        <!-- Upcoming exams will be populated here -->
+      </div>
+      
+      <div id="completedExams" class="tab-content">
+        <!-- Completed exams will be populated here -->
+      </div>
     </section>
 
     <div class="popup-actions">
@@ -28,6 +41,41 @@
         <span class="button-format">.ics</span>
       </button>
       <a href="#" id="docsLink" class="docs-link" title="Hướng dẫn sử dụng">📖 Hướng dẫn</a>
+    </div>
+
+    <!-- Filter Modal -->
+    <div id="filterModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Lọc lịch thi</h3>
+          <button id="closeFilter" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="filter-group">
+            <label class="filter-item">
+              <input type="checkbox" id="filterFE" checked>
+              <span>FE (Final Exam)</span>
+            </label>
+            <label class="filter-item">
+              <input type="checkbox" id="filterPE" checked>
+              <span>PE (Practical Exam)</span>
+            </label>
+            <label class="filter-item">
+              <input type="checkbox" id="filter2NDFE" checked>
+              <span>2NDFE (Second Final Exam)</span>
+            </label>
+            <label class="filter-item">
+              <input type="checkbox" id="filter2NDPE" checked>
+              <span>2NDPE (Second Practical Exam)</span>
+            </label>
+          </div>
+          <div class="filter-actions">
+            <button id="selectAll" class="filter-btn">Chọn tất cả</button>
+            <button id="deselectAll" class="filter-btn">Bỏ chọn tất cả</button>
+            <button id="applyFilter" class="filter-btn apply-btn">Áp dụng</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer class="popup-footer">
