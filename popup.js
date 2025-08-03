@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const ICS = function (uid = "fptu", prod = "exam-exporter") {
+      const ICS = function (uid = "fptu", prod = "examination") {
         const SEPARATOR = '\r\n';
         let eventsData = [];
         const calendarStart = [
@@ -324,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (docsLink) {
     docsLink.addEventListener("click", (e) => {
       e.preventDefault();
-      chrome.tabs.create({ url: "https://yunkhngn.github.io/fptu-exam-calendar-exporter/" });
+      chrome.tabs.create({ url: "https://yunkhngn.github.io/fptu-examination/" });
     });
   }
 });
