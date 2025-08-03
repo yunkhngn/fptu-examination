@@ -1,0 +1,68 @@
+body {
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    width: 360px;
+    height: 600px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+.header button {
+    background: #f0f0f0;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.content {
+    padding: 16px;
+    overflow-y: auto;
+    height: calc(100% - 60px);
+}
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.subject-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.subject {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1d2b53;
+}
+.type {
+    background: #d3fce1;
+    color: #088450;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+.room {
+    color: #d08b3e;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.desc {
+    color: #77809c;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.time {
+    color: #1e1e1e;
+    font-weight: 500;
+}

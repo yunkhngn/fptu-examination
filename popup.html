@@ -1,77 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Xuất lịch thi FPT</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      width: 400px;
-      height: 100%;
-      min-height: 100%;
-      box-sizing: border-box;
-      font-family: system-ui, sans-serif;
-      background-color: #f9fafb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .container {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      width: 90%;
-      max-width: 360px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      font-size: 20px;
-      margin-bottom: 12px;
-      color: #111827;
-    }
-
-    p {
-      font-size: 14px;
-      color: #6b7280;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    button {
-      font-size: 16px;
-      padding: 10px 20px;
-      border: none;
-      background-color: #2563eb;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    button:hover {
-      background-color: #1d4ed8;
-    }
-
-    .credit {
-      margin-top: 20px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Lịch thi FPTU</title>
+  <link rel="stylesheet" href="popup.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <div class="container">
-    <h1>Xuất lịch thi PE/FE</h1>
-    <p>Tải lịch thi PE/FE của sinh viên FPTU dưới dạng tệp ICS, tương thích với Lịch Apple và Google.</p>
-    <button id="exportBtn">Tải xuống tệp .ics</button>
-    <div class="credit">Made by @yunkhngn 💛 I love FPT</div>
+  <div class="popup-wrapper">
+    <header class="popup-header">
+      <h1>Lịch thi FPTU</h1>
+      <div class="popup-controls">
+        <button id="syncButton" title="Đồng bộ lại lịch thi">🔄</button>
+        <button id="settingsButton" title="Cài đặt hiển thị">⚙️</button>
+      </div>
+    </header>
+
+    <section id="examList" class="popup-list">
+      <div class="loading">Đang tải lịch thi...</div>
+      <div class="error" style="display: none;">Không thể tải lịch thi. Vui lòng thử lại sau.</div>
+    </section>
+
+    <footer class="popup-footer">
+      <p>Tiện ích bởi <a href="https://github.com/yunkhngn" target="_blank">@yunkhngn</a></p>
+    </footer>
+
+    <script src="popup.js"></script>
   </div>
-  <script src="popup.js"></script>
 </body>
 </html>
