@@ -1,4 +1,4 @@
-# FPTU Examination Calendar Exporter
+# FPTU Examination
 
 A modern Chrome extension that helps FPT University students easily extract and manage their exam schedules from the FAP system.
 
@@ -51,7 +51,7 @@ A modern Chrome extension that helps FPT University students easily extract and 
    - Select the cloned folder
 
 ### Chrome Web Store Installation
-Coming soon - pending Google review
+Available now: [FPTU Examination on Chrome Web Store](https://chromewebstore.google.com/detail/fptu-exam-to-calendar/obiiippodjlfcmdipfbkneknbakjekfm)
 
 ## Usage Guide
 
@@ -109,6 +109,7 @@ fptu-exam-calendar-exporter/
 ├── popup.js               # Main logic
 ├── content.js             # FAP page interaction
 ├── icons/                 # Extension icons
+├── docs/                  # Documentation website
 └── README.md              # Documentation
 ```
 
@@ -124,7 +125,7 @@ Contributions are welcome! Please:
 
 ## Changelog
 
-### v2.0.0 (2024)
+### v2.0.0 (2025)
 - Added tab system (Upcoming/Completed exams)
 - Added countdown timer with color coding
 - Added exam type filtering system
@@ -140,9 +141,15 @@ Contributions are welcome! Please:
 ## Author
 
 **Developed with love by:**
-- [@yunkhngn](https://github.com/yunkhngn) - Developer & Designer & Guitarist
+- [@yunkhngn](https://github.com/yunkhngn) - Developer & Designer
 
-**I love FPTU** 
+**I love FPTU** - Proud FPT University student
+
+## Support
+
+- **Bug Reports**: [GitHub Issues](https://github.com/yunkhngn/fptu-exam-calendar-exporter/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/yunkhngn/fptu-exam-calendar-exporter/discussions)
+- **Contact**: [Author's GitHub](https://github.com/yunkhngn)
 
 ## License
 
