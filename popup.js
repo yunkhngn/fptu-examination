@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Check if elements exist before adding event listeners
   const syncButton = document.getElementById("syncButton");
   const exportBtn = document.getElementById("exportBtn");
   
@@ -91,11 +90,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const cal = new ICS();
             events.forEach(e => {
               let title = e.title;
-              // Use the tag from content.js if available
+           
               if (e.tag) {
                 title += ' - ' + e.tag;
               } else {
-                // Fallback detection
+ 
                 if (/2nd_fe/i.test(e.description)) title += ' - 2NDFE';
                 else if (/practical_exam/i.test(e.description)) title += ' - PE';
                 else if (/multiple_choices|final|fe/i.test(e.description)) title += ' - FE';
@@ -122,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Auto sync if on FAP page - only if elements are ready
+
   setTimeout(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (tabs && tabs[0] && tabs[0].url && tabs[0].url.includes("https://fap.fpt.edu.vn/Exam/ScheduleExams.aspx")) {
@@ -131,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }, 100);
 
-  // Load saved data
+
   const data = localStorage.getItem("examSchedule");
   if (data) {
     try {
@@ -175,7 +174,7 @@ function autoSyncSchedule() {
           return;
         }
         localStorage.setItem("examSchedule", JSON.stringify(response.events));
-        // Don't reload, just render the new data
+
         renderExamList(response.events);
       });
     });
@@ -186,7 +185,7 @@ function renderExamList(events) {
   const examList = document.getElementById("examList");
   if (!examList) return;
 
-  examList.innerHTML = ""; // clear
+  examList.innerHTML = ""; 
   if (!events.length) {
     examList.innerHTML = "<div class='error'>Không có lịch thi nào.</div>";
     return;
@@ -196,12 +195,11 @@ function renderExamList(events) {
     const desc = (e.description + ' ' + e.title).toLowerCase();
     const examType = (e.examType || "").toLowerCase();
     const tagType = (() => {
-      // First priority: use the tag from content.js if it exists
+    
       if (e.tag) {
-        return e.tag; // This is already uppercase (2NDFE, PE, FE, etc.)
+        return e.tag; 
       }
       
-      // Fallback: try to detect from description and title
       const tag = (examType || "").toLowerCase();
       if (tag.includes("2ndfe") || desc.includes("2ndfe") || desc.includes("2nd fe")) return "2NDFE";
       if (tag.includes("2ndpe") || desc.includes("2ndpe") || desc.includes("2nd pe")) return "2NDPE";
