@@ -861,33 +861,48 @@ body {
   }
   
   .hero h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
-  .features-grid,
-  .download-options,
-  .faq-grid {
+  .hero-subtitle {
+    font-size: 1.3rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+  
+  .hero-buttons {
+    justify-content: center;
+  }
+  
+  .features-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
   
-  .step {
-    flex-direction: column;
-    text-align: center;
+  .feature-card {
+    padding: 24px;
   }
   
-  .footer-content {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-  
-  .extension-mockup {
-    width: 100%;
-    max-width: 360px;
+  .download-options {
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
   
   .download-card {
     padding: 30px 24px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .card-badge-container {
+    align-items: center;
   }
   
   .version-highlights {
@@ -903,6 +918,32 @@ body {
     flex-direction: column;
     text-align: center;
     gap: 12px;
+  }
+  
+  .step {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+  
+  .step-number {
+    margin: 0 auto;
+  }
+  
+  .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .extension-mockup {
+    width: 100%;
+    max-width: 360px;
   }
   
   .method-card {
@@ -928,19 +969,123 @@ body {
   }
   
   .hero {
-    padding: 40px 0;
+    padding: 60px 0;
+    min-height: auto;
+  }
+  
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .hero-description {
+    font-size: 0.95rem;
+  }
+  
+  .hero-icon {
+    font-size: 3rem;
   }
   
   .features,
   .download,
   .guide,
-  .faq {
-    padding: 60px 0;
+  .faq,
+  .ics-guide {
+    padding: 50px 0;
+  }
+  
+  .features h2,
+  .download h2,
+  .guide h2,
+  .faq h2,
+  .ics-guide h2 {
+    font-size: 2rem;
   }
   
   .feature-card,
   .download-card,
   .faq-item {
-    padding: 24px;
+    padding: 20px;
+  }
+  
+  .download-card h3 {
+    font-size: 1.5rem;
+  }
+  
+  .btn-primary.large,
+  .btn-secondary.large {
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+  
+  .install-steps li {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .step-icon {
+    width: auto;
+  }
+  
+  .extension-mockup {
+    max-width: 320px;
+  }
+  
+  .mockup-content {
+    max-height: 250px;
+  }
+  
+  .exam-title {
+    font-size: 14px;
+  }
+  
+  .version-highlights h3 {
+    font-size: 1.5rem;
+  }
+  
+  .highlight-content h4 {
+    font-size: 1rem;
+  }
+  
+  .highlight-content p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .extension-mockup {
+    max-width: 280px;
+  }
+  
+  .mockup-header h3 {
+    font-size: 16px;
+  }
+  
+  .mockup-controls button {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  
+  .download-card h3 {
+    font-size: 1.3rem;
+  }
+  
+  .card-description {
+    font-size: 1rem;
   }
 }
