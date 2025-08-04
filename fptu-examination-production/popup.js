@@ -383,19 +383,12 @@ function renderExamList(events) {
   
   if (!upcomingContainer || !completedContainer) return;
 
-  // Clear both containers safely
-  while (upcomingContainer.firstChild) {
-    upcomingContainer.removeChild(upcomingContainer.firstChild);
-  }
-  while (completedContainer.firstChild) {
-    completedContainer.removeChild(completedContainer.firstChild);
-  }
+  // Clear both containers
+  upcomingContainer.innerHTML = "";
+  completedContainer.innerHTML = "";
   
   if (!events.length) {
-    const errorDiv = document.createElement("div");
-    errorDiv.className = "error";
-    errorDiv.textContent = "Không có lịch thi nào.";
-    upcomingContainer.appendChild(errorDiv);
+    upcomingContainer.innerHTML = "<div class='error'>Không có lịch thi nào.</div>";
     return;
   }
 
@@ -421,10 +414,7 @@ function renderExamList(events) {
 
   // Render upcoming exams
   if (upcomingExams.length === 0) {
-    const errorDiv = document.createElement("div");
-    errorDiv.className = "error";
-    errorDiv.textContent = "Không có kỳ thi nào sắp tới.";
-    upcomingContainer.appendChild(errorDiv);
+    upcomingContainer.innerHTML = "<div class='error'>Không có kỳ thi nào sắp tới.</div>";
   } else {
     upcomingExams.forEach(e => {
       const examItem = createExamItem(e);
@@ -434,10 +424,7 @@ function renderExamList(events) {
 
   // Render completed exams
   if (completedExams.length === 0) {
-    const errorDiv = document.createElement("div");
-    errorDiv.className = "error";
-    errorDiv.textContent = "Không có kỳ thi nào đã hoàn thành.";
-    completedContainer.appendChild(errorDiv);
+    completedContainer.innerHTML = "<div class='error'>Không có kỳ thi nào đã hoàn thành.</div>";
   } else {
     completedExams.forEach(e => {
       const examItem = createExamItem(e);
@@ -491,88 +478,38 @@ function createExamItem(e) {
   const diffTime = examDate.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
-  // Create exam card structure safely
-  const examCard = document.createElement("div");
-  examCard.className = "exam-card";
-
-  const examHeader = document.createElement("div");
-  examHeader.className = "exam-header";
-
-  const examTitle = document.createElement("div");
-  examTitle.className = "exam-title";
-  examTitle.textContent = e.title + " ";
-
-  // Add tags safely
-  if (tagType) {
-    const tagSpan = document.createElement("span");
-    tagSpan.className = "tag";
-    if (tagType === "2NDFE") {
-      tagSpan.classList.add("secondfe");
-      tagSpan.textContent = "2NDFE";
-    } else if (tagType === "2NDPE") {
-      tagSpan.classList.add("secondpe");
-      tagSpan.textContent = "2NDPE";
-    } else if (tagType === "PE") {
-      tagSpan.classList.add("pe");
-      tagSpan.textContent = "PE";
-    } else if (tagType === "FE") {
-      tagSpan.classList.add("fe");
-      tagSpan.textContent = "FE";
+  const countdownTag = (() => {
+    if (diffDays < 0) {
+      return '<span class="tag countdown past">Đã thi</span>';
+    } else if (diffDays === 0) {
+      return '<span class="tag countdown today">Hôm nay</span>';
+    } else if (diffDays === 1) {
+      return '<span class="tag countdown tomorrow">Ngày mai</span>';
+    } else if (diffDays <= 3) {
+      return `<span class="tag countdown urgent">Còn ${diffDays} ngày</span>`;
+    } else {
+      return `<span class="tag countdown future">Còn ${diffDays} ngày</span>`;
     }
-    examTitle.appendChild(tagSpan);
-    examTitle.appendChild(document.createTextNode(" "));
-  }
-
-  // Add countdown tag safely
-  const countdownSpan = document.createElement("span");
-  countdownSpan.className = "tag countdown";
-  if (diffDays < 0) {
-    countdownSpan.classList.add("past");
-    countdownSpan.textContent = "Đã thi";
-  } else if (diffDays === 0) {
-    countdownSpan.classList.add("today");
-    countdownSpan.textContent = "Hôm nay";
-  } else if (diffDays === 1) {
-    countdownSpan.classList.add("tomorrow");
-    countdownSpan.textContent = "Ngày mai";
-  } else if (diffDays <= 3) {
-    countdownSpan.classList.add("urgent");
-    countdownSpan.textContent = "Còn " + diffDays + " ngày";
-  } else {
-    countdownSpan.classList.add("future");
-    countdownSpan.textContent = "Còn " + diffDays + " ngày";
-  }
-  examTitle.appendChild(countdownSpan);
-
-  examHeader.appendChild(examTitle);
-  examCard.appendChild(examHeader);
-
-  // Create exam details safely
-  const examDetail = document.createElement("div");
-  examDetail.className = "exam-detail";
-
-  const createDetailLine = (label, value) => {
-    const line = document.createElement("div");
-    line.className = "line";
-    
-    const labelSpan = document.createElement("span");
-    labelSpan.className = "label";
-    const strong = document.createElement("strong");
-    strong.textContent = label + ":";
-    labelSpan.appendChild(strong);
-    
-    line.appendChild(labelSpan);
-    line.appendChild(document.createTextNode(" " + value));
-    return line;
-  };
-
-  examDetail.appendChild(createDetailLine("Phương thức", e.description || "Chưa rõ"));
-  examDetail.appendChild(createDetailLine("Phòng", e.location || "Chưa rõ"));
-  examDetail.appendChild(createDetailLine("Ngày thi", formatDate(start)));
-  examDetail.appendChild(createDetailLine("Thời gian", formatTime(start) + " - " + formatTime(end)));
-
-  examCard.appendChild(examDetail);
-  row.appendChild(examCard);
-  
+  })();
+  const tag = (() => {
+    if (tagType === "2NDFE") return '<span class="tag secondfe">2NDFE</span>';
+    if (tagType === "2NDPE") return '<span class="tag secondpe">2NDPE</span>';
+    if (tagType === "PE") return '<span class="tag fe">PE</span>';
+    if (tagType === "FE") return '<span class="tag fe">FE</span>';
+    return '';
+  })();
+  row.innerHTML = `
+    <div class="exam-card">
+      <div class="exam-header">
+        <div class="exam-title">${e.title} ${tag} ${countdownTag}</div>
+      </div>
+      <div class="exam-detail">
+        <div class="line"><span class="label method"><strong>Phương thức:</strong></span> ${e.description || "Chưa rõ"}</div>
+        <div class="line"><span class="label room"><strong>Phòng:</strong></span> ${e.location || "Chưa rõ"}</div>
+        <div class="line"><span class="label date"><strong>Ngày thi:</strong></span> ${formatDate(start)}</div>
+        <div class="line"><span class="label time"><strong>Thời gian:</strong></span> ${formatTime(start)} - ${formatTime(end)}</div>
+      </div>
+    </div>
+  `;
   return row;
 }
