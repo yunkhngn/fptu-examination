@@ -2,9 +2,36 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === "extractSchedule") {
     try {
       const fmtTime = t => {
-        if (!t || typeof t !== "string" || !t.includes("h")) return { hour: 0, minute: 0 };
-        const [h, m] = t.replace("h", ":").split(":").map(Number);
-        return { hour: h, minute: m };
+        if (!t || typeof t !== "string") return { hour: 0, minute: 0 };
+        
+        // Clean up the string - remove extra spaces and normalize
+        const cleaned = t.trim().replace(/\s+/g, "");
+        
+        // Handle Vietnamese format (10h00, 10h, 10H00)
+        if (cleaned.match(/\d+h\d*/i)) {
+          const [h, m = "0"] = cleaned.replace(/h/i, ":").split(":").map(Number);
+          return { hour: h, minute: m };
+        }
+        
+        // Handle colon format (10:00, 10:30)
+        if (cleaned.includes(":")) {
+          const [h, m = "0"] = cleaned.split(":").map(Number);
+          return { hour: h, minute: m };
+        }
+        
+        // Handle hour only format (10, 14) - assume no minutes
+        if (/^\d{1,2}$/.test(cleaned)) {
+          const h = Number(cleaned);
+          return { hour: h, minute: 0 };
+        }
+        
+        // Handle dot format (10.00, 10.30)
+        if (cleaned.includes(".")) {
+          const [h, m = "0"] = cleaned.split(".").map(Number);
+          return { hour: h, minute: m };
+        }
+        
+        return { hour: 0, minute: 0 };
       };
 
       const rows = Array.from(document.querySelectorAll("#ctl00_mainContent_divContent table tr"))
