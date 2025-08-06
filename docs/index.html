@@ -6,7 +6,7 @@
     <title>FPTU Examination - Tiện ích lịch thi FPT University</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="./icon.png">
-    <meta name="description" content="Tiện ích Chrome giúp sinh viên FPT University xuất lịch thi từ hệ thống FAP ra file .ics">
+    <meta name="description" content="Tiện ích Chrome giúp sinh viên FPT University xuất lịch thi từ hệ thống FAP ra file .ics với xử lý định dạng thời gian thông minh">
 </head>
 <body>
     <header class="hero">
@@ -16,7 +16,7 @@
                     <div class="hero-icon">📅</div>
                     <h1>FPTU Examination</h1>
                     <p class="hero-subtitle">Tiện ích Chrome hiện đại cho sinh viên FPT University</p>
-                    <p class="hero-description">Trích xuất và quản lý lịch thi từ hệ thống FAP một cách dễ dàng</p>
+                    <p class="hero-description">Trích xuất và quản lý lịch thi từ hệ thống FAP với xử lý định dạng thời gian thông minh</p>
                     <div class="hero-buttons">
                         <a href="#download" class="btn-primary">Cài đặt</a>
                         <a href="#guide" class="btn-secondary">Hướng dẫn sử dụng</a>
@@ -75,33 +75,91 @@
                 <div class="feature-card">
                     <div class="feature-icon">📊</div>
                     <h3>Quản lý thông minh</h3>
-                    <p>Phân chia rõ ràng kỳ thi sắp tới và đã hoàn thành với hệ thống tab hiện đại</p>
+                    <p>Phân chia rõ ràng kỳ thi sắp tới và đã hoàn thành với hệ thống tab hiện đại và bộ đếm số lượng</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⏰</div>
                     <h3>Đếm ngược thời gian</h3>
-                    <p>Hiển thị số ngày còn lại với mã màu trực quan: đỏ (khẩn cấp), xanh (an toàn)</p>
+                    <p>Hiển thị số ngày còn lại với mã màu trực quan: hôm nay (cam), ngày mai (vàng), khẩn cấp (đỏ), tương lai (xanh)</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🏷️</div>
                     <h3>Phân loại tự động</h3>
-                    <p>Tự động nhận diện loại kỳ thi: FE, PE, 2NDFE, 2NDPE với màu sắc riêng biệt</p>
+                    <p>Tự động nhận diện loại kỳ thi: FE, PE, 2NDFE, 2NDPE với màu sắc riêng biệt từ dữ liệu FAP</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔍</div>
                     <h3>Bộ lọc thông minh</h3>
-                    <p>Lọc theo loại kỳ thi, lưu tùy chọn tự động với giao diện modal hiện đại</p>
+                    <p>Lọc theo loại kỳ thi, lưu tùy chọn tự động với giao diện modal hiện đại và các nút tiện ích</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>Thiết kế hiện đại</h3>
-                    <p>Giao diện Material Design, responsive, dark mode tự động theo hệ thống</p>
+                    <div class="feature-icon">🕐</div>
+                    <h3>Xử lý định dạng thời gian linh hoạt</h3>
+                    <p>Tự động nhận diện và xử lý nhiều định dạng: 10h00, 10:00, 10.00, 10 từ các phiên bản FAP khác nhau</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📤</div>
                     <h3>Xuất lịch thông minh</h3>
-                    <p>Chỉ xuất kỳ thi sắp tới có phòng xác định, tương thích với mọi ứng dụng lịch</p>
+                    <p>Chỉ xuất kỳ thi sắp tới có phòng xác định, hoạt động từ bất kỳ website nào sau khi đồng bộ</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="time-formats">
+        <div class="container">
+            <h2>🕐 Xử lý định dạng thời gian thông minh</h2>
+            <p class="section-description">Extension tự động nhận diện và xử lý nhiều định dạng thời gian khác nhau từ hệ thống FAP:</p>
+            
+            <div class="formats-grid">
+                <div class="format-card">
+                    <div class="format-icon">🇻🇳</div>
+                    <h3>Định dạng Việt Nam</h3>
+                    <div class="format-examples">
+                        <code>10h00 - 12h00</code>
+                        <code>14h30 - 16h00</code>
+                        <code>8H00 - 10H30</code>
+                    </div>
+                    <p>Định dạng truyền thống của Việt Nam với ký tự "h" hoặc "H"</p>
+                </div>
+                
+                <div class="format-card">
+                    <div class="format-icon">🌍</div>
+                    <h3>Định dạng quốc tế</h3>
+                    <div class="format-examples">
+                        <code>10:00 - 12:00</code>
+                        <code>14:30 - 16:00</code>
+                        <code>8:00 - 10:30</code>
+                    </div>
+                    <p>Định dạng chuẩn quốc tế với dấu hai chấm ":"</p>
+                </div>
+                
+                <div class="format-card">
+                    <div class="format-icon">🔢</div>
+                    <h3>Định dạng chỉ giờ</h3>
+                    <div class="format-examples">
+                        <code>10 - 12</code>
+                        <code>14 - 16</code>
+                        <code>8 - 10</code>
+                    </div>
+                    <p>Chỉ hiển thị giờ, tự động thêm ":00" cho phút</p>
+                </div>
+                
+                <div class="format-card">
+                    <div class="format-icon">•</div>
+                    <h3>Định dạng dấu chấm</h3>
+                    <div class="format-examples">
+                        <code>10.00 - 12.30</code>
+                        <code>14.30 - 16.00</code>
+                        <code>8.00 - 10.30</code>
+                    </div>
+                    <p>Sử dụng dấu chấm "." để phân tách giờ và phút</p>
+                </div>
+            </div>
+            
+            <div class="format-note">
+                <h3>💡 Lưu ý quan trọng</h3>
+                <p>Extension tự động phát hiện và xử lý tất cả các định dạng trên mà không cần cấu hình. Điều này đảm bảo tính tương thích với tất cả các phiên bản hệ thống FAP và các cơ sở khác nhau của FPT University.</p>
             </div>
         </div>
     </section>
@@ -109,14 +167,14 @@
     <section id="download" class="download">
         <div class="container">
             <h2>Tải về và cài đặt</h2>
-            <p class="section-subtitle">Phiên bản mới nhất: <span class="version-badge">v2.0.0</span></p>
+            <p class="section-subtitle">Phiên bản mới nhất: <span class="version-badge">v2.1.0</span></p>
             
             <div class="download-options">
                 <div class="download-card featured">
                     <div class="card-header">
                         <div class="card-icon">🏪</div>
                         <div class="card-badge-container">
-                            <div class="version-tag">v2.0.2</div>
+                            <div class="version-tag">v2.1.0</div>
                             <div class="recommended-badge">Khuyến nghị</div>
                         </div>
                     </div>
@@ -146,7 +204,7 @@
                     
                     <div class="version-info">
                         <span class="version-label">Phiên bản phát triển</span>
-                        <span class="version-number">v2.0.0+</span>
+                        <span class="version-number">v2.1.0+</span>
                     </div>
                     
                     <ol class="install-steps">
@@ -176,34 +234,34 @@
             </div>
             
             <div class="version-highlights">
-                <h3>🎉 Mới trong v2.0.2</h3>
+                <h3>🎉 Mới trong v2.1.0</h3>
                 <div class="highlights-grid">
+                    <div class="highlight-item">
+                        <div class="highlight-icon">🕐</div>
+                        <div class="highlight-content">
+                            <h4>Xử lý định dạng thời gian linh hoạt</h4>
+                            <p>Tự động nhận diện: 10h00, 10:00, 10.00, 10 từ các phiên bản FAP khác nhau</p>
+                        </div>
+                    </div>
                     <div class="highlight-item">
                         <div class="highlight-icon">📊</div>
                         <div class="highlight-content">
-                            <h4>Hệ thống Tab</h4>
-                            <p>Phân chia rõ ràng kỳ thi sắp tới và đã hoàn thành</p>
+                            <h4>Hệ thống Tab với bộ đếm</h4>
+                            <p>Phân chia rõ ràng kỳ thi sắp tới và đã hoàn thành với số lượng hiển thị</p>
                         </div>
                     </div>
                     <div class="highlight-item">
                         <div class="highlight-icon">⏰</div>
                         <div class="highlight-content">
-                            <h4>Đếm ngược thời gian</h4>
-                            <p>Hiển thị số ngày còn lại với mã màu trực quan</p>
+                            <h4>Đếm ngược thời gian nâng cao</h4>
+                            <p>Mã màu chi tiết: hôm nay, ngày mai, khẩn cấp, tương lai</p>
                         </div>
                     </div>
                     <div class="highlight-item">
                         <div class="highlight-icon">🔍</div>
                         <div class="highlight-content">
                             <h4>Bộ lọc thông minh</h4>
-                            <p>Lọc theo loại kỳ thi với giao diện modal hiện đại</p>
-                        </div>
-                    </div>
-                    <div class="highlight-item">
-                        <div class="highlight-icon">🌐</div>
-                        <div class="highlight-content">
-                            <h4>Xuất lịch mọi nơi</h4>
-                            <p>Không cần ở trang FAP, xuất lịch từ bất kỳ website nào</p>
+                            <p>Modal interface với Select All, Deselect All, Apply</p>
                         </div>
                     </div>
                 </div>
@@ -398,12 +456,20 @@
                     <p>Extension chỉ xuất các kỳ thi sắp tới và có phòng thi xác định. Các kỳ thi chưa có phòng (thường là chưa cần thi lại) sẽ không được bao gồm.</p>
                 </div>
                 <div class="faq-item">
+                    <h3>Extension xử lý định dạng thời gian như thế nào?</h3>
+                    <p>Extension tự động nhận diện và xử lý nhiều định dạng: 10h00, 10:00, 10.00, 10 từ các phiên bản FAP khác nhau mà không cần cấu hình.</p>
+                </div>
+                <div class="faq-item">
                     <h3>Extension có hoạt động trên mobile không?</h3>
                     <p>Extension chỉ hoạt động trên Chrome desktop. Tuy nhiên, file .ics xuất ra có thể mở trên mọi thiết bị.</p>
                 </div>
                 <div class="faq-item">
                     <h3>Làm sao để cập nhật lịch thi mới?</h3>
-                    <p>Truy cập lại trang FAP và nhấn nút Sync trong extension để tải dữ liệu mới nhất.</p>
+                    <p>Truy cập lại trang FAP và nhấn nút Đồng bộ trong extension để tải dữ liệu mới nhất.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Tại sao có các tab "Chưa thi" và "Đã thi"?</h3>
+                    <p>Để dễ quản lý, extension tự động phân chia kỳ thi theo thời gian và hiển thị số lượng. Chỉ kỳ thi sắp tới mới được xuất ra file .ics.</p>
                 </div>
             </div>
         </div>
