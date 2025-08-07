@@ -71,6 +71,24 @@ html, body {
   background-color: #f9fafb;
 }
 
+.docs-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.docs-link:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
 .exam-card {
   background-color: #ffffff;
   border-radius: 12px;
@@ -226,22 +244,76 @@ html, body {
   border-top: 1px solid #e5e7eb;
 }
 
-.docs-link {
+.new-popup-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
-  color: #6b7280;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
 }
 
-.docs-link:hover {
-  background-color: #f3f4f6;
-  color: #374151;
+.new-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  flex: 1;
+}
+
+.new-action-btn .button-icon {
+  font-size: 14px;
+}
+
+.new-action-btn .button-text {
+  font-size: 12px;
+}
+
+.new-action-btn.sync-btn {
+  background-color: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+.new-action-btn.sync-btn:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.new-action-btn.download-btn {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.new-action-btn.download-btn:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.new-action-btn.clear-btn {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.new-action-btn.clear-btn:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+.new-action-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .popup-footer {

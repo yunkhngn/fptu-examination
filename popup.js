@@ -327,9 +327,315 @@ document.addEventListener("DOMContentLoaded", () => {
       chrome.tabs.create({ url: "https://yunkhngn.github.io/fptu-examination/" });
     });
   }
+
+  // Get new button elements
+  const syncScheduleBtn = document.getElementById("syncScheduleBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const clearBtn = document.getElementById("clearBtn");
+
+  // Add event handlers for new buttons
+  if (syncScheduleBtn) {
+    syncScheduleBtn.addEventListener("click", handleSyncClassSchedule);
+  }
+
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", handleDownloadClassSchedule);
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", handleClearClassSchedule);
+  }
 });
 
-// ...existing code...
+function handleSyncClassSchedule() {
+  console.log("🔄 Starting class schedule sync...");
+  
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    if (!tabs || !tabs[0]) {
+      console.error("❌ No active tab found");
+      alert("Vui lòng mở trang lịch học FAP trước khi sync.");
+      return;
+    }
+    
+    console.log("📍 Current URL:", tabs[0].url);
+    
+    // Simplified URL check - just check for FAP domain
+    if (!tabs[0].url.includes("fap.fpt.edu.vn")) {
+      console.error("❌ Not on FAP domain");
+      alert("Vui lòng truy cập trang FAP để sync lịch học.");
+      return;
+    }
+    
+    console.log("✅ URL check passed, injecting script...");
+    
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      files: ["content.js"]
+    }, (results) => {
+      if (chrome.runtime.lastError) {
+        console.error('❌ Script injection failed:', chrome.runtime.lastError);
+        alert("Không thể truy cập trang để sync lịch học. Vui lòng refresh trang và thử lại.");
+        return;
+      }
+      
+      console.log("✅ Script injected, sending message...");
+      
+      chrome.tabs.sendMessage(tabs[0].id, { action: "extractWeeklySchedule" }, function (response) {
+        if (chrome.runtime.lastError) {
+          console.error('❌ Message sending failed:', chrome.runtime.lastError);
+          alert("Có lỗi xảy ra khi sync lịch học. Vui lòng thử lại.");
+          return;
+        }
+        
+        console.log("📨 Response received:", response);
+        
+        if (!response || !response.success) {
+          console.error("❌ Extraction failed");
+          alert("Không thể trích xuất lịch học. Vui lòng:\n1. Đảm bảo bạn đang ở trang có bảng lịch học\n2. Trang đã load hoàn toàn\n3. Bạn đã đăng nhập");
+          return;
+        }
+        
+        const newEvents = response.schedule || [];
+        console.log(`📊 Found ${newEvents.length} events`);
+        
+        if (newEvents.length === 0) {
+          alert("Không tìm thấy lịch học nào. Vui lòng kiểm tra:\n1. Tuần hiện tại có lịch học không\n2. Trang đã load đầy đủ chưa");
+          return;
+        }
+        
+        // Process and save events
+        const existingData = localStorage.getItem("classSchedule");
+        let allSchedule = [];
+        
+        if (existingData) {
+          try {
+            allSchedule = JSON.parse(existingData);
+          } catch (e) {
+            console.error("Error parsing existing schedule:", e);
+            allSchedule = [];
+          }
+        }
+        
+        // Cải thiện phần kiểm tra trùng lặp
+        const existingKeys = new Set();
+        
+        // Tạo các key duy nhất từ lịch đã có
+        allSchedule.forEach(event => {
+          // Sử dụng rawDate nếu có, nếu không thì thử dùng start cũ
+          if (event.rawDate) {
+            const key = `${event.title}-${event.rawDate.day}/${event.rawDate.month}-${event.rawDate.startHour}:${event.rawDate.startMinute}`;
+            existingKeys.add(key);
+          } else if (event.start) {
+            // Xử lý với dữ liệu cũ (chuyển đổi sang string nếu cần)
+            const start = typeof event.start === 'string' ? new Date(event.start) : event.start;
+            const key = `${event.title}-${start.getDate()}/${start.getMonth()+1}-${start.getHours()}:${start.getMinutes()}`;
+            existingKeys.add(key);
+          }
+        });
+        
+        console.log("Existing keys:", existingKeys);
+        
+        // Lọc ra những event mới
+        const uniqueNewEvents = newEvents.filter(event => {
+          if (event.rawDate) {
+            const key = `${event.title}-${event.rawDate.day}/${event.rawDate.month}-${event.rawDate.startHour}:${event.rawDate.startMinute}`;
+            return !existingKeys.has(key);
+          }
+          return true; // Nếu không có rawDate, coi như là mới
+        });
+        
+        console.log(`Found ${uniqueNewEvents.length} new events from ${newEvents.length} total extracted events`);
+        
+        // Kết hợp dữ liệu cũ và mới
+        allSchedule = [...allSchedule, ...uniqueNewEvents];
+        localStorage.setItem("classSchedule", JSON.stringify(allSchedule));
+        
+        console.log(`✅ Sync complete: ${uniqueNewEvents.length} new, ${allSchedule.length} total`);
+        alert(`Đã sync thành công!\n- Mới: ${uniqueNewEvents.length} lịch học\n- Tổng cộng: ${allSchedule.length} lịch học`);
+      });
+    });
+  });
+}
+
+function handleDownloadClassSchedule() {
+  const storedData = localStorage.getItem("classSchedule");
+  
+  if (!storedData) {
+    alert("Chưa có dữ liệu lịch học. Vui lòng sync lịch học trước.");
+    return;
+  }
+
+  let schedule;
+  try {
+    schedule = JSON.parse(storedData);
+    console.log("Loaded schedule:", schedule.length, "events");
+  } catch (e) {
+    console.error("Parse stored schedule failed:", e);
+    alert("Dữ liệu lịch học bị lỗi. Vui lòng sync lại.");
+    return;
+  }
+
+  if (!schedule || !schedule.length) {
+    alert("Không có lịch học nào để tải.");
+    return;
+  }
+
+  // Create ICS content for class schedule
+  const ICS = function (uid = "fptu", prod = "class-schedule") {
+    const SEPARATOR = '\r\n';
+    let eventsData = [];
+    const calendarStart = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:' + prod,
+      'CALSCALE:GREGORIAN'
+    ].join(SEPARATOR);
+    const calendarEnd = 'END:VCALENDAR';
+
+    return {
+      addEvent: function (title, desc, loc, event, isFirstSlot = false) {
+        const now = new Date();
+        
+        // Format date for ICS file - without timezone adjustment
+        const formatDate = (year, month, day, hour, minute) => {
+          // Format as YYYYMMDDTHHMMSS (local time, not UTC)
+          return `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}${String(minute).padStart(2, '0')}00`;
+        };
+        
+        const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') + 'Z';
+        const uidStr = `${timestamp}-${Math.random().toString(36).substring(2, 8)}@${prod}`;
+        
+        // Generate start and end times directly from raw values
+        let startDate, endDate;
+        
+        if (event.rawDate) {
+          const rd = event.rawDate;
+          // Use rawDate values directly without timezone adjustments
+          startDate = formatDate(rd.year, rd.month, rd.day, rd.startHour, rd.startMinute);
+          endDate = formatDate(rd.year, rd.month, rd.day, rd.endHour, rd.endMinute);
+          
+          console.log(`Event: ${title} on ${rd.day}/${rd.month}/${rd.year} ${rd.startHour}:${rd.startMinute}-${rd.endHour}:${rd.endMinute}`);
+        } else {
+          // Fallback (should not happen with new data)
+          const start = new Date();
+          const end = new Date();
+          end.setHours(end.getHours() + 1);
+          
+          startDate = start.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+          endDate = end.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+          
+          if (!startDate.endsWith('Z')) startDate += 'Z';
+          if (!endDate.endsWith('Z')) endDate += 'Z';
+        }
+        
+        // Build the event with potential alarms
+        let eventArray = [
+          'BEGIN:VEVENT',
+          'UID:' + uidStr,
+          'DTSTAMP:' + timestamp,
+          'DTSTART;VALUE=DATE-TIME:' + startDate,  // Specify as DATE-TIME with no Z for local time
+          'DTEND;VALUE=DATE-TIME:' + endDate,      // Specify as DATE-TIME with no Z for local time
+          'SUMMARY:' + title,
+          'DESCRIPTION:' + desc,
+          'LOCATION:' + loc
+        ];
+        
+        // Add 30-minute alarm for first slots of the day
+        if (isFirstSlot || event.slot === "Slot 1") {
+          console.log(`Adding 30-minute alarm for: ${title} (${event.slot})`);
+          eventArray = eventArray.concat([
+            'BEGIN:VALARM',
+            'ACTION:DISPLAY',
+            'DESCRIPTION:Sắp đến giờ học! (Nhắc nhở 30 phút)',
+            'TRIGGER:-PT30M',
+            'END:VALARM'
+          ]);
+        }
+        
+        // End the event
+        eventArray.push('END:VEVENT');
+        
+        // Join all lines with separator and add to events data
+        eventsData.push(eventArray.join(SEPARATOR));
+      },
+      build: function () {
+        return calendarStart + SEPARATOR + eventsData.join(SEPARATOR) + SEPARATOR + calendarEnd;
+      }
+    };
+  };
+
+  const cal = new ICS();
+  
+  // Group events by date to identify first slots
+  const eventsByDate = {};
+  
+  // First pass: group events by date
+  schedule.forEach(event => {
+    if (event.rawDate) {
+      const dateKey = `${event.rawDate.day}-${event.rawDate.month}-${event.rawDate.year}`;
+      if (!eventsByDate[dateKey]) {
+        eventsByDate[dateKey] = [];
+      }
+      eventsByDate[dateKey].push(event);
+    }
+  });
+  
+  // Second pass: sort events by time and mark first slots
+  Object.keys(eventsByDate).forEach(dateKey => {
+    // Sort events by start time
+    eventsByDate[dateKey].sort((a, b) => {
+      if (a.rawDate.startHour !== b.rawDate.startHour) {
+        return a.rawDate.startHour - b.rawDate.startHour;
+      }
+      return a.rawDate.startMinute - b.rawDate.startMinute;
+    });
+    
+    // Mark the first event of the day
+    if (eventsByDate[dateKey].length > 0) {
+      eventsByDate[dateKey][0].isFirstSlot = true;
+    }
+  });
+  
+  // Add events to calendar
+  schedule.forEach(event => {
+    cal.addEvent(
+      event.title,
+      event.description || '',
+      event.location || '',
+      event,
+      event.isFirstSlot // Pass the flag that identifies if it's the first slot of the day
+    );
+  });
+
+  const blob = new Blob([cal.build()], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('download', 'lich-hoc.ics');
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 100);
+
+  alert(`Đã tải xuống ${schedule.length} lịch học. Chúc bạn học tập vui vẻ.`);
+}
+
+function handleClearClassSchedule() {
+  if (!confirm('Bạn có chắc chắn muốn xoá toàn bộ lịch học đã lưu?')) {
+    return;
+  }
+  
+  try {
+    localStorage.removeItem("classSchedule");
+    alert('Đã xoá toàn bộ lịch học.');
+  } catch (e) {
+    console.error("Error clearing class schedule:", e);
+    alert('Có lỗi xảy ra khi xoá lịch học.');
+  }
+}
 
 function autoSyncSchedule() {
   const loadingEl = document.querySelector(".loading");
