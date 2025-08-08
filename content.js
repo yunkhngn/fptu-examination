@@ -243,6 +243,38 @@ function extractWeeklyScheduleFromTable() {
                          
         const timeMatch = content.match(/\((\d{1,2}:\d{2}-\d{1,2}:\d{2})\)/);
         
+        // Extract detail link (anchor href)
+        const hrefMatch = content.match(/href="([^"]+)"/i);
+        let detailUrl = "";
+        if (hrefMatch && hrefMatch[1]) {
+          try {
+            detailUrl = new URL(hrefMatch[1], window.location.href).href;
+          } catch (e) {
+            detailUrl = hrefMatch[1];
+          }
+        }
+
+        // Extract attendance status from <font color="...">status</font>
+        let attendanceStatus = null;
+        let attendanceColor = null;
+        const statusFontMatch = content.match(/<font\s+color="([^"]+)">([^<]+)<\/font>/i);
+        if (statusFontMatch) {
+          attendanceColor = (statusFontMatch[1] || '').toLowerCase();
+          attendanceStatus = (statusFontMatch[2] || '').trim().toLowerCase();
+        } else {
+          // Fallback textual detection when not wrapped in font
+          if (/\bnot\s*yet\b/i.test(content)) {
+            attendanceStatus = 'not yet';
+            attendanceColor = 'gray';
+          } else if (/\babsent\b/i.test(content)) {
+            attendanceStatus = 'absent';
+            attendanceColor = 'red';
+          } else if (/\battended\b/i.test(content)) {
+            attendanceStatus = 'attended';
+            attendanceColor = 'green';
+          }
+        }
+        
         // Even if we can't find all parts, at least capture what we can
         if (subjectMatch) {
           const subject = subjectMatch[1];
@@ -285,6 +317,9 @@ function extractWeeklyScheduleFromTable() {
           // Store the correct adjusted date
           schedule.push({
             title: subject,
+            detailUrl,
+            attendanceStatus,
+            attendanceColor,
             location: room,
             description: `${subject} - ${slotName} (${timeRange})`,
             rawDate: {

@@ -15,37 +15,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const scheduleContent = document.getElementById("scheduleTab");
   const examActionsRow = document.getElementById("examActions");
   const scheduleActionsRow = document.getElementById("scheduleActions");
+  const examListSection = document.getElementById("examList");
   if (examActionsRow) examActionsRow.style.display = "flex";
   if (scheduleActionsRow) scheduleActionsRow.style.display = "none";
 
-  if (upcomingTab && completedTab && upcomingContent && completedContent) {
+  if (upcomingContent && completedContent) {
     const activateTab = (name) => {
+      // Remove active from all tab buttons
       [upcomingTab, completedTab, scheduleTabBtn].forEach(btn => btn && btn.classList.remove("active"));
+      // Hide all contents
       [upcomingContent, completedContent, scheduleContent].forEach(c => c && c.classList.remove("active"));
-      if (name === "upcoming") {
-        upcomingTab.classList.add("active");
-        upcomingContent.classList.add("active");
-        if (examActionsRow) examActionsRow.style.display = "flex";
-        if (scheduleActionsRow) scheduleActionsRow.style.display = "none";
-      } else if (name === "completed") {
-        completedTab.classList.add("active");
-        completedContent.classList.add("active");
-        if (examActionsRow) examActionsRow.style.display = "flex";
-        if (scheduleActionsRow) scheduleActionsRow.style.display = "none";
-      } else if (name === "schedule") {
+
+      // Toggle action rows based on tab
+      if (name === "schedule") {
+        document.getElementById("examActions").style.display = "none";
+        document.getElementById("scheduleActions").style.display = "flex";
+      } else {
+        document.getElementById("examActions").style.display = "flex";
+        document.getElementById("scheduleActions").style.display = "none";
+      }
+
+      if (name === "schedule") {
         if (scheduleTabBtn) scheduleTabBtn.classList.add("active");
         if (scheduleContent) scheduleContent.classList.add("active");
-        if (examActionsRow) examActionsRow.style.display = "none";
-        if (scheduleActionsRow) scheduleActionsRow.style.display = "flex";
+        if (examListSection) examListSection.classList.remove("exams-two-col");
+      } else {
+        // Unified Exams view: show both columns
+        if (upcomingTab) upcomingTab.classList.add("active");
+        upcomingContent.classList.add("active");
+        completedContent.classList.add("active");
+        if (examListSection) examListSection.classList.add("exams-two-col");
       }
     };
 
-    upcomingTab.addEventListener("click", () => activateTab("upcoming"));
-    completedTab.addEventListener("click", () => activateTab("completed"));
-    if (scheduleTabBtn) {
-      scheduleTabBtn.addEventListener("click", () => activateTab("schedule"));
-    }
-    activateTab(document.querySelector('.tab-btn.active')?.id === 'completedTab' ? 'completed' : 'upcoming');
+    if (upcomingTab) upcomingTab.addEventListener("click", () => activateTab("exams"));
+    if (scheduleTabBtn) scheduleTabBtn.addEventListener("click", () => activateTab("schedule"));
+
+    // Initial tab: first tab in navigation
+    const firstTabId = document.querySelector('.tab-navigation .tab-btn')?.id;
+    if (firstTabId === 'scheduleTabBtn') activateTab('schedule');
+    else activateTab('exams');
   }
 
   // Load filter preferences
@@ -358,6 +367,8 @@ document.addEventListener("DOMContentLoaded", () => {
       sc.appendChild(empty);
     }
   }
+  // Try to auto-refresh attendance status from the current FAP page (only updates matching items)
+  tryAutoRefreshAttendance();
 function renderClassSchedule(schedule) {
   const container = document.getElementById("scheduleTab");
   if (!container) return;
@@ -409,6 +420,20 @@ function renderClassSchedule(schedule) {
     const title = document.createElement("div");
     title.className = "class-title";
     title.textContent = ev.title || "Môn học";
+    // Attendance status chip next to course code
+    const attendanceChip = document.createElement("span");
+    attendanceChip.className = "chip attendance";
+    const dotAtt = document.createElement("span");
+    dotAtt.className = "dot";
+    attendanceChip.appendChild(dotAtt);
+    const rawStatus = (ev.attendanceStatus || "not yet").toLowerCase();
+    let statusClass = "notyet";
+    let statusLabel = "Not yet";
+    if (rawStatus.includes("absent")) { statusClass = "absent"; statusLabel = "Absent"; }
+    else if (rawStatus.includes("attended")) { statusClass = "attended"; statusLabel = "Attended"; }
+    attendanceChip.classList.add(statusClass);
+    attendanceChip.appendChild(document.createTextNode(" " + statusLabel));
+    title.appendChild(attendanceChip);
 
     const tags = document.createElement("div");
     tags.className = "class-tags";
@@ -430,6 +455,87 @@ function renderClassSchedule(schedule) {
       const roomText = (ev.location || "").replace(/\s*-\s*$/, "").trim();
       chipRoom.appendChild(document.createTextNode(` ${roomText}`));
       tags.appendChild(chipRoom);
+    }
+
+    // Detail link chip (third) — open detail page and refresh attendance from there
+    if (ev.detailUrl) {
+      const linkChip = document.createElement("a");
+      linkChip.href = ev.detailUrl;
+      linkChip.target = "_blank";
+      linkChip.rel = "noopener";
+      linkChip.className = "chip link";
+      const dotLink = document.createElement("span");
+      dotLink.className = "dot";
+      linkChip.appendChild(dotLink);
+      linkChip.appendChild(document.createTextNode(" Link"));
+
+      linkChip.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const url = ev.detailUrl;
+
+        // 1) Fetch the detail page directly and parse attendance
+        try {
+          const res = await fetch(url, { credentials: 'include' });
+          const html = await res.text();
+          const parseAttendance = (html) => {
+            try {
+              const doc = new DOMParser().parseFromString(html, 'text/html');
+              // Pattern 1: table row <td>Attendance:</td><td>STATUS</td>
+              const tds = Array.from(doc.querySelectorAll('td'));
+              for (let i = 0; i < tds.length; i++) {
+                const label = (tds[i].textContent || '').trim().toLowerCase().replace(/[:\s]+$/, '');
+                if (label === 'attendance' && tds[i+1]) {
+                  const status = (tds[i+1].textContent || '').trim().toLowerCase();
+                  if (status) return { status };
+                }
+              }
+              // Pattern 2: <font color="...">status</font>
+              const font = doc.querySelector('font[color]');
+              if (font) {
+                return {
+                  status: (font.textContent || '').trim().toLowerCase(),
+                  color: (font.getAttribute('color') || '').toLowerCase()
+                };
+              }
+              // Pattern 3: fallback scan
+              const txt = (doc.body?.innerText || '').toLowerCase();
+              if (txt.includes('absent')) return { status: 'absent' };
+              if (txt.includes('attended')) return { status: 'attended' };
+              if (txt.includes('not yet')) return { status: 'not yet' };
+              return null;
+            } catch { return null; }
+          };
+          const found = parseAttendance(html);
+
+          if (found && found.status) {
+            // 2) Update local schedule immediately
+            const keyOf = (obj) => obj && obj.rawDate ? `${(obj.title||'').trim()}__${obj.rawDate.year}-${obj.rawDate.month}-${obj.rawDate.day}__${obj.rawDate.startHour}:${obj.rawDate.startMinute}` : null;
+            let saved = JSON.parse(localStorage.getItem('classSchedule') || '[]');
+            const k = keyOf(ev);
+            let changed = false;
+            saved = saved.map(it => {
+              if (keyOf(it) === k) {
+                if (it.attendanceStatus !== found.status) changed = true;
+                it.attendanceStatus = found.status;
+                if (found.color) it.attendanceColor = found.color;
+              }
+              return it;
+            });
+            if (changed) {
+              localStorage.setItem('classSchedule', JSON.stringify(saved));
+              try { window.renderClassSchedule && window.renderClassSchedule(saved); } catch (_) {}
+              // silent update – no toast
+            }
+          }
+        } catch (err) {
+          console.warn('Fetch detail failed:', err);
+        }
+
+        // 3) Open the detail page for the user
+        try { chrome.tabs.create({ url }); } catch (_) { window.open(url, '_blank'); }
+      });
+
+      tags.appendChild(linkChip);
     }
 
     header.appendChild(title);
@@ -464,6 +570,7 @@ function renderClassSchedule(schedule) {
 
   container.appendChild(grid);
 }
+window.renderClassSchedule = renderClassSchedule;
 
   // Documentation link event
   if (docsLink) {
@@ -536,6 +643,12 @@ function handleSyncClassSchedule() {
         console.log("📨 Response received:", response);
         
         if (!response || !response.success) {
+          if (response && response.loginRequired) {
+            // Open login page and focus it so user can sign in
+            chrome.tabs.create({ url: 'https://fap.fpt.edu.vn/Default.aspx', active: true });
+            alert('Bạn cần đăng nhập FAP để sync lịch học. Vui lòng đăng nhập rồi quay lại popup.');
+            return;
+          }
           console.error("❌ Extraction failed");
           alert("Không thể trích xuất lịch học. Vui lòng:\n1. Đảm bảo bạn đang ở trang có bảng lịch học\n2. Trang đã load hoàn toàn\n3. Bạn đã đăng nhập");
           return;
@@ -596,7 +709,7 @@ function handleSyncClassSchedule() {
         allSchedule = [...allSchedule, ...uniqueNewEvents];
         localStorage.setItem("classSchedule", JSON.stringify(allSchedule));
         // Re-render UI for the schedule tab
-        renderClassSchedule(allSchedule);
+        window.renderClassSchedule && window.renderClassSchedule(allSchedule);
         console.log(`✅ Sync complete: ${uniqueNewEvents.length} new, ${allSchedule.length} total`);
         // Chuyển sang tab Lịch học và hiện toast thay vì alert
         try {
@@ -778,14 +891,98 @@ function handleClearClassSchedule() {
   if (!confirm('Bạn có chắc chắn muốn xoá toàn bộ lịch học đã lưu?')) {
     return;
   }
-  
   try {
     localStorage.removeItem("classSchedule");
-    alert('Đã xoá toàn bộ lịch học.');
+    // Re-render empty state immediately
+    try {
+      window.renderClassSchedule && window.renderClassSchedule([]);
+    } catch (_) {}
+    // Ensure we are on the Lịch học tab so user sees the change
+    try { document.getElementById('scheduleTabBtn')?.click(); } catch (_) {}
+    showToast('Đã xoá toàn bộ lịch học');
   } catch (e) {
     console.error("Error clearing class schedule:", e);
     alert('Có lỗi xảy ra khi xoá lịch học.');
   }
+}
+
+function tryAutoRefreshAttendance() {
+  // Only run if we already have some schedule stored (to match against)
+  const stored = localStorage.getItem("classSchedule");
+  if (!stored) return;
+  let saved;
+  try { saved = JSON.parse(stored); } catch { return; }
+  if (!Array.isArray(saved) || saved.length === 0) return;
+
+  const WEEK_URL = 'https://fap.fpt.edu.vn/Report/ScheduleOfWeek.aspx';
+  const keyOf = (ev) => {
+    if (ev && ev.rawDate) {
+      const rd = ev.rawDate;
+      return `${(ev.title||'').trim()}__${rd.year}-${rd.month}-${rd.day}__${rd.startHour}:${rd.startMinute}`;
+    }
+    return null;
+  };
+
+  // Removed: showToast('Đang cập nhật điểm danh tuần...', 1500);
+
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    const activeTab = tabs && tabs[0];
+    const isOnFap = !!(activeTab && activeTab.url && /https?:\/\/fap\.fpt\.edu\.vn/i.test(activeTab.url));
+    const isWeekPage = isOnFap && /\/ScheduleOfWeek\.aspx/i.test(activeTab.url);
+
+    // Helper to extract from a given tabId
+    const extractFromTab = (tabId, onDone) => {
+      chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] }, () => {
+        if (chrome.runtime.lastError) {
+          console.warn('Skip auto attendance refresh (inject error):', chrome.runtime.lastError.message);
+          return onDone && onDone(false);
+        }
+        chrome.tabs.sendMessage(tabId, { action: 'extractWeeklySchedule' }, function (response) {
+          if (chrome.runtime.lastError || !response || !response.success || !Array.isArray(response.schedule)) {
+            if (response && response.loginRequired) {
+              try {
+                chrome.tabs.update(tabId, { active: true });
+              } catch (_) {}
+              showToast('Cần đăng nhập FAP để cập nhật điểm danh. Vui lòng đăng nhập rồi mở lại popup.', 3000);
+            }
+            return onDone && onDone(false);
+          }
+          const fresh = response.schedule;
+          const freshMap = new Map();
+          fresh.forEach(ev => { const k = keyOf(ev); if (k) freshMap.set(k, ev); });
+
+          let updated = 0;
+          const merged = saved.map(ev => {
+            const k = keyOf(ev);
+            if (!k) return ev;
+            const f = freshMap.get(k);
+            if (!f) return ev; // only update when matched
+            const attStatus = f.attendanceStatus || f.attendance_status || null;
+            const attColor = f.attendanceColor || f.attendance_color || null;
+            if (attStatus && attStatus !== ev.attendanceStatus) { ev.attendanceStatus = attStatus; updated++; }
+            if (attColor && attColor !== ev.attendanceColor) { ev.attendanceColor = attColor; }
+            return ev;
+          });
+
+          if (updated > 0) {
+            localStorage.setItem('classSchedule', JSON.stringify(merged));
+            try { window.renderClassSchedule && window.renderClassSchedule(merged); } catch (_) {}
+            // silent update – no toast
+          }
+          onDone && onDone(true);
+        });
+      });
+    };
+
+    if (isWeekPage) {
+      // Extract directly from the current tab
+      extractFromTab(activeTab.id);
+      return;
+    }
+
+    // not on week page – skip silently
+    return;
+  });
 }
 
 function autoSyncSchedule() {
@@ -847,6 +1044,12 @@ function renderExamList(events) {
   while (completedContainer.firstChild) {
     completedContainer.removeChild(completedContainer.firstChild);
   }
+
+  // Insert column headings
+  const upHead = document.createElement("div"); upHead.className = "split-heading"; upHead.textContent = "Chưa thi";
+  upcomingContainer.appendChild(upHead);
+  const compHead = document.createElement("div"); compHead.className = "split-heading"; compHead.textContent = "Đã thi";
+  completedContainer.appendChild(compHead);
   
   if (!events.length) {
     const errorDiv = document.createElement("div");
@@ -876,6 +1079,10 @@ function renderExamList(events) {
     }
   });
 
+  // Update headings with counts
+  upHead.textContent = `Chưa thi (${upcomingExams.length})`;
+  compHead.textContent = `Đã thi (${completedExams.length})`;
+
   // Render upcoming exams
   if (upcomingExams.length === 0) {
     const errorDiv = document.createElement("div");
@@ -903,11 +1110,19 @@ function renderExamList(events) {
   }
 
   // Update tab labels with counts
-  const upcomingTab = document.getElementById("upcomingTab");
-  const completedTab = document.getElementById("completedTab");
-  
-  if (upcomingTab) upcomingTab.textContent = `📅 Chưa thi (${upcomingExams.length})`;
-  if (completedTab) completedTab.textContent = `✅ Đã thi (${completedExams.length})`;
+  const upcomingTabBtn = document.getElementById("upcomingTab");
+  const completedTabBtn = document.getElementById("completedTab");
+  if (completedTabBtn) completedTabBtn.textContent = `✅ Đã thi (${completedExams.length})`;
+  if (upcomingTabBtn) {
+    // If single Exams tab, show plain title; counts are displayed in column headings below
+    const firstTabId = document.querySelector('.tab-navigation .tab-btn')?.id;
+    if (!completedTabBtn && firstTabId !== 'completedTab') {
+      // Single Exams tab – show plain title; counts are displayed in column headings below
+      upcomingTabBtn.textContent = `🗓️ Kỳ thi`;
+    } else {
+      upcomingTabBtn.textContent = `📅 Chưa thi (${upcomingExams.length})`;
+    }
+  }
   
   // Apply filters after rendering
   setTimeout(() => {

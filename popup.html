@@ -2,22 +2,21 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>Lịch thi FPTU</title>
+  <title>FPTU Schedule</title>
   <link rel="stylesheet" href="popup.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
   <div class="popup-wrapper">
     <header class="popup-header">
-      <h1>📅 FPTU Examination</h1>
+      <h1>📅 FPTU Schedule</h1>
       <div class="popup-controls"></div>
     </header>
 
     <section id="examList" class="popup-list">
       <div class="tab-navigation">
-        <button id="upcomingTab" class="tab-btn active">📅 Chưa thi</button>
-        <button id="completedTab" class="tab-btn">✅ Đã thi</button>
         <button id="scheduleTabBtn" class="tab-btn">📚 Lịch học</button>
+        <button id="upcomingTab" class="tab-btn active">🗓️ Kỳ thi</button>
       </div>
       
       <div class="loading">Hãy đồng bộ lịch thi...</div>
@@ -36,26 +35,26 @@
 
     <div class="popup-actions">
       <div id="examActions" class="actions-row">
-        <div class="export-panel">
-          <button id="syncButton" class="control-btn" title="Đồng bộ lại lịch thi">Đồng bộ</button>
-          <button id="settingsButton" class="control-btn" title="Cài đặt hiển thị">Lọc</button>
-          <button id="exportBtn" class="export-button" title="Tải xuống file .ics">
-            <span class="button-icon">📅</span>
-            <span class="button-text">Tải xuống lịch</span>
-            <span class="button-format">.ics</span>
+          <button id="syncButton" class="new-action-btn sync-btn" title="Đồng bộ lịch thi">
+            <span class="button-text">📍 Đồng bộ lịch thi</span>
           </button>
-        </div>
+          <button id="exportBtn" class="new-action-btn clear-btn" title="Tải xuống file .ics">
+            <span class="button-text">📅 Tải xuống lịch</span>
+          </button>
+          <button id="settingsButton" class="new-action-btn download-btn" title="Cài đặt hiển thị">
+            <span class="button-text">⚙️ Cài đặt</span>
+          </button>
       </div>
 
       <div id="scheduleActions" class="actions-row" style="display:none;">
         <button id="syncScheduleBtn" class="new-action-btn sync-btn" title="Đồng bộ lịch học">
-          <span class="button-text">Sync lịch</span>
+          <span class="button-text">✉️ Đồng bộ lịch học</span>
         </button>
         <button id="downloadBtn" class="new-action-btn download-btn" title="Tải xuống">
-          <span class="button-text">Tải</span>
+          <span class="button-text">📥 Tải lịch học</span>
         </button>
         <button id="clearBtn" class="new-action-btn clear-btn" title="Xoá lịch học">
-          <span class="button-text">Xoá</span>
+          <span class="button-text">🗑️ Xoá</span>
         </button>
       </div>
     </div>
