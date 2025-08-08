@@ -11,21 +11,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const completedTab = document.getElementById("completedTab");
   const upcomingContent = document.getElementById("upcomingExams");
   const completedContent = document.getElementById("completedExams");
+  const scheduleTabBtn = document.getElementById("scheduleTabBtn");
+  const scheduleContent = document.getElementById("scheduleTab");
+  const examActionsRow = document.getElementById("examActions");
+  const scheduleActionsRow = document.getElementById("scheduleActions");
+  if (examActionsRow) examActionsRow.style.display = "flex";
+  if (scheduleActionsRow) scheduleActionsRow.style.display = "none";
 
   if (upcomingTab && completedTab && upcomingContent && completedContent) {
-    upcomingTab.addEventListener("click", () => {
-      upcomingTab.classList.add("active");
-      completedTab.classList.remove("active");
-      upcomingContent.classList.add("active");
-      completedContent.classList.remove("active");
-    });
+    const activateTab = (name) => {
+      [upcomingTab, completedTab, scheduleTabBtn].forEach(btn => btn && btn.classList.remove("active"));
+      [upcomingContent, completedContent, scheduleContent].forEach(c => c && c.classList.remove("active"));
+      if (name === "upcoming") {
+        upcomingTab.classList.add("active");
+        upcomingContent.classList.add("active");
+        if (examActionsRow) examActionsRow.style.display = "flex";
+        if (scheduleActionsRow) scheduleActionsRow.style.display = "none";
+      } else if (name === "completed") {
+        completedTab.classList.add("active");
+        completedContent.classList.add("active");
+        if (examActionsRow) examActionsRow.style.display = "flex";
+        if (scheduleActionsRow) scheduleActionsRow.style.display = "none";
+      } else if (name === "schedule") {
+        if (scheduleTabBtn) scheduleTabBtn.classList.add("active");
+        if (scheduleContent) scheduleContent.classList.add("active");
+        if (examActionsRow) examActionsRow.style.display = "none";
+        if (scheduleActionsRow) scheduleActionsRow.style.display = "flex";
+      }
+    };
 
-    completedTab.addEventListener("click", () => {
-      completedTab.classList.add("active");
-      upcomingTab.classList.remove("active");
-      completedContent.classList.add("active");
-      upcomingContent.classList.remove("active");
-    });
+    upcomingTab.addEventListener("click", () => activateTab("upcoming"));
+    completedTab.addEventListener("click", () => activateTab("completed"));
+    if (scheduleTabBtn) {
+      scheduleTabBtn.addEventListener("click", () => activateTab("schedule"));
+    }
+    activateTab(document.querySelector('.tab-btn.active')?.id === 'completedTab' ? 'completed' : 'upcoming');
   }
 
   // Load filter preferences
@@ -320,6 +340,131 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Load class schedule for the new tab
+  const storedSchedule = localStorage.getItem("classSchedule");
+  if (storedSchedule) {
+    try {
+      renderClassSchedule(JSON.parse(storedSchedule));
+    } catch (e) {
+      console.error("Parse stored class schedule failed:", e);
+    }
+  } else {
+    // Ensure empty state appears if container exists
+    const sc = document.getElementById("scheduleTab");
+    if (sc && !sc.firstChild) {
+      const empty = document.createElement("div");
+      empty.className = "schedule-empty";
+      empty.textContent = "Chưa có lịch học. Nhấn \"Sync lịch học\" để tải.";
+      sc.appendChild(empty);
+    }
+  }
+function renderClassSchedule(schedule) {
+  const container = document.getElementById("scheduleTab");
+  if (!container) return;
+
+  // Clear existing
+  while (container.firstChild) container.removeChild(container.firstChild);
+
+  // Update tab label with count
+  const btn = document.getElementById("scheduleTabBtn");
+  if (btn) btn.textContent = `📚 Lịch học (${Array.isArray(schedule) ? schedule.length : 0})`;
+
+  // Normalize and sort schedule by date/time ascending
+  const toMillis = (ev) => {
+    if (ev && ev.rawDate) {
+      const rd = ev.rawDate;
+      // month in JS Date is 0-based
+      return new Date(rd.year, (rd.month || 1) - 1, rd.day || 1, rd.startHour || 0, rd.startMinute || 0, 0).getTime();
+    }
+    if (ev && ev.start) {
+      try { return new Date(ev.start).getTime(); } catch (_) {}
+    }
+    return Number.MAX_SAFE_INTEGER; // push unknown dates to the end
+  };
+  const sorted = Array.isArray(schedule) ? [...schedule].sort((a,b) => toMillis(a) - toMillis(b)) : [];
+
+  if (!Array.isArray(schedule) || schedule.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "schedule-empty";
+    empty.textContent = "Chưa có lịch học. Nhấn \"Sync lịch học\" để tải.";
+    container.appendChild(empty);
+    return;
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "schedule-grid";
+
+  // Helper formatters using rawDate if present
+  const two = n => String(n).padStart(2, '0');
+  const fmtDate = rd => `${two(rd.day)}/${two(rd.month)}/${rd.year}`;
+  const fmtTime = (h,m) => `${two(h)}:${two(m)}`;
+
+  sorted.forEach(ev => {
+    const card = document.createElement("div");
+    card.className = "class-card";
+
+    const header = document.createElement("div");
+    header.className = "class-header";
+
+    const title = document.createElement("div");
+    title.className = "class-title";
+    title.textContent = ev.title || "Môn học";
+
+    const tags = document.createElement("div");
+    tags.className = "class-tags";
+
+    // Slot/Type chip (first)
+    const chipType = document.createElement("span");
+    chipType.className = "chip type";
+    const dotType = document.createElement("span"); dotType.className = "dot";
+    chipType.appendChild(dotType);
+    chipType.appendChild(document.createTextNode(` ${(ev.slot || ev.type || "Slot ?").toString()}`));
+    tags.appendChild(chipType);
+
+    // Room chip (second)
+    if (ev.location) {
+      const chipRoom = document.createElement("span");
+      chipRoom.className = "chip room";
+      const dot = document.createElement("span"); dot.className = "dot";
+      chipRoom.appendChild(dot);
+      const roomText = (ev.location || "").replace(/\s*-\s*$/, "").trim();
+      chipRoom.appendChild(document.createTextNode(` ${roomText}`));
+      tags.appendChild(chipRoom);
+    }
+
+    header.appendChild(title);
+    card.appendChild(header);
+    card.appendChild(tags);
+
+    const meta = document.createElement("div");
+    meta.className = "class-meta";
+
+    const addMeta = (label, value) => {
+      const l = document.createElement("div");
+      l.className = "label";
+      const strong = document.createElement("strong");
+      strong.textContent = label + ":";
+      l.appendChild(strong);
+      const v = document.createElement("div");
+      v.textContent = value || "—";
+      meta.appendChild(l);
+      meta.appendChild(v);
+    };
+
+    if (ev.rawDate) {
+      addMeta("Ngày", fmtDate(ev.rawDate));
+      addMeta("Giờ", `${fmtTime(ev.rawDate.startHour, ev.rawDate.startMinute)} - ${fmtTime(ev.rawDate.endHour, ev.rawDate.endMinute)}`);
+    }
+
+    card.appendChild(meta);
+    const divLine = document.createElement("div"); divLine.className = "meta-divider"; card.appendChild(divLine);
+
+    grid.appendChild(card);
+  });
+
+  container.appendChild(grid);
+}
+
   // Documentation link event
   if (docsLink) {
     docsLink.addEventListener("click", (e) => {
@@ -349,6 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function handleSyncClassSchedule() {
   console.log("🔄 Starting class schedule sync...");
+  showToast("Đang sync lịch học...", 1500);
   
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (!tabs || !tabs[0]) {
@@ -446,12 +592,17 @@ function handleSyncClassSchedule() {
         
         console.log(`Found ${uniqueNewEvents.length} new events from ${newEvents.length} total extracted events`);
         
-        // Kết hợp dữ liệu cũ và mới
+                // Kết hợp dữ liệu cũ và mới
         allSchedule = [...allSchedule, ...uniqueNewEvents];
         localStorage.setItem("classSchedule", JSON.stringify(allSchedule));
-        
+        // Re-render UI for the schedule tab
+        renderClassSchedule(allSchedule);
         console.log(`✅ Sync complete: ${uniqueNewEvents.length} new, ${allSchedule.length} total`);
-        alert(`Đã sync thành công!\n- Mới: ${uniqueNewEvents.length} lịch học\n- Tổng cộng: ${allSchedule.length} lịch học`);
+        // Chuyển sang tab Lịch học và hiện toast thay vì alert
+        try {
+          document.getElementById('scheduleTabBtn')?.click();
+        } catch (e) { /* no-op */ }
+        showToast(`Đã sync lịch học! Mới: ${uniqueNewEvents.length} • Tổng: ${allSchedule.length}`, 2600);
       });
     });
   });
@@ -881,4 +1032,33 @@ function createExamItem(e) {
   row.appendChild(examCard);
   
   return row;
+}
+
+function showToast(message, duration = 1800) {
+  let toast = document.getElementById('popupToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'popupToast';
+    toast.style.position = 'fixed';
+    toast.style.top = '12px';
+    toast.style.right = '12px';
+    toast.style.background = '#111827';
+    toast.style.color = '#fff';
+    toast.style.padding = '10px 14px';
+    toast.style.borderRadius = '8px';
+    toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+    toast.style.fontSize = '13px';
+    toast.style.zIndex = '9999';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity .2s ease';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+  });
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => {
+    toast.style.opacity = '0';
+  }, duration);
 }

@@ -1,8 +1,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 360px;
-  height: 600px;
+  width: 600px;
+  height: 480px;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: #f0f2f5;
@@ -244,6 +244,39 @@ html, body {
   border-top: 1px solid #e5e7eb;
 }
 
+/* Grouped actions rows under the list */
+.actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* White card that groups Đồng bộ + Lọc + Tải .ics */
+.export-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* Make export button compact inside the panel */
+.export-panel .export-button {
+  min-width: unset;
+  padding: 8px 12px;
+}
+
+/* Keep control buttons visually balanced */
+.export-panel .control-btn {
+  padding: 8px 12px;
+}
+
 .new-popup-actions {
   display: flex;
   align-items: center;
@@ -278,37 +311,35 @@ html, body {
   font-size: 12px;
 }
 
-.new-action-btn.sync-btn {
-  background-color: #10b981;
-  color: white;
-  border-color: #10b981;
-}
 
-.new-action-btn.sync-btn:hover {
-  background-color: #059669;
-  border-color: #059669;
-}
-
-.new-action-btn.download-btn {
-  background-color: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
-}
-
-.new-action-btn.download-btn:hover {
-  background-color: #2563eb;
-  border-color: #2563eb;
-}
-
+.new-action-btn.sync-btn,
+.new-action-btn.download-btn,
 .new-action-btn.clear-btn {
-  background-color: #ef4444;
-  color: white;
-  border-color: #ef4444;
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  min-width: 120px;
+  padding: 8px 14px;
 }
 
+.new-action-btn.sync-btn:hover,
+.new-action-btn.download-btn:hover,
 .new-action-btn.clear-btn:hover {
-  background-color: #dc2626;
-  border-color: #dc2626;
+  background-color: #f9fafb;
+  border-color: #bbb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.new-action-btn.sync-btn:active,
+.new-action-btn.download-btn:active,
+.new-action-btn.clear-btn:active {
+  background-color: #f0f2f5;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
 
 .new-action-btn:active {
@@ -316,6 +347,10 @@ html, body {
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
+.new-action-btn .button-icon,
+.new-action-btn .button-text {
+  color: #333;
+}
 .popup-footer {
   font-size: 11px;
   text-align: center;
@@ -490,4 +525,109 @@ html, body {
 
 .tab-content.active {
   display: block;
+}
+
+/* ===== Schedule (Lịch học) Tab ===== */
+#scheduleTab {
+  padding: 0 4px 8px 4px;
+}
+
+#scheduleTab .schedule-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 12px 0;
+}
+
+#scheduleTab .schedule-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 560px) {
+  #scheduleTab .schedule-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+#scheduleTab .class-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#scheduleTab .class-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+#scheduleTab .class-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+#scheduleTab .class-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+#scheduleTab .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color: #374151;
+  white-space: nowrap;
+}
+
+#scheduleTab .chip .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+#scheduleTab .chip.time { color: #2563eb; border-color: #bfdbfe; background: #eff6ff; }
+#scheduleTab .chip.room { color: #059669; border-color: #bbf7d0; background: #ecfdf5; }
+#scheduleTab .chip.week { color: #7c3aed; border-color: #e9d5ff; background: #faf5ff; }
+#scheduleTab .chip.type { color: #c2410c; border-color: #fed7aa; background: #fff7ed; }
+
+#scheduleTab .class-meta {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  row-gap: 6px;
+  column-gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+#scheduleTab .class-meta .label { color: #374151; }
+
+#scheduleTab .meta-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 4px 0;
+}
+
+#scheduleTab .schedule-empty {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+  padding: 24px 8px;
 }

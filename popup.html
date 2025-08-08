@@ -10,16 +10,14 @@
   <div class="popup-wrapper">
     <header class="popup-header">
       <h1>📅 FPTU Examination</h1>
-      <div class="popup-controls">
-        <button id="syncButton" class="control-btn" title="Đồng bộ lại lịch thi">Đồng bộ</button>
-        <button id="settingsButton" class="control-btn" title="Cài đặt hiển thị">Lọc</button>
-      </div>
+      <div class="popup-controls"></div>
     </header>
 
     <section id="examList" class="popup-list">
       <div class="tab-navigation">
         <button id="upcomingTab" class="tab-btn active">📅 Chưa thi</button>
         <button id="completedTab" class="tab-btn">✅ Đã thi</button>
+        <button id="scheduleTabBtn" class="tab-btn">📚 Lịch học</button>
       </div>
       
       <div class="loading">Hãy đồng bộ lịch thi...</div>
@@ -31,31 +29,35 @@
       <div id="completedExams" class="tab-content">
         <!-- Completed exams will be populated here -->
       </div>
+      <div id="scheduleTab" class="tab-content">
+        <!-- Class schedule will be populated here -->
+      </div>
     </section>
 
-    <!-- New buttons section -->
-    <div class="new-popup-actions">
-      <button id="syncScheduleBtn" class="new-action-btn sync-btn" title="Đồng bộ lịch học">
-        <span class="button-icon">🔄</span>
-        <span class="button-text">Sync lịch học</span>
-      </button>
-      <button id="downloadBtn" class="new-action-btn download-btn" title="Tải xuống">
-        <span class="button-icon">⬇️</span>
-        <span class="button-text">Tải</span>
-      </button>
-      <button id="clearBtn" class="new-action-btn clear-btn" title="Xoá lịch thi">
-        <span class="button-icon">🗑️</span>
-        <span class="button-text">Xoá</span>
-      </button>
-    </div>
-
     <div class="popup-actions">
-      <button id="exportBtn" class="export-button" title="Tải xuống file .ics">
-        <span class="button-icon">📅</span>
-        <span class="button-text">Tải xuống lịch</span>
-        <span class="button-format">.ics</span>
-      </button>
-      <a href="https://yunkhngn.github.io/fptu-examination/" id="docsLink" class="docs-link" title="Hướng dẫn sử dụng">📖 Hướng dẫn</a>
+      <div id="examActions" class="actions-row">
+        <div class="export-panel">
+          <button id="syncButton" class="control-btn" title="Đồng bộ lại lịch thi">Đồng bộ</button>
+          <button id="settingsButton" class="control-btn" title="Cài đặt hiển thị">Lọc</button>
+          <button id="exportBtn" class="export-button" title="Tải xuống file .ics">
+            <span class="button-icon">📅</span>
+            <span class="button-text">Tải xuống lịch</span>
+            <span class="button-format">.ics</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="scheduleActions" class="actions-row" style="display:none;">
+        <button id="syncScheduleBtn" class="new-action-btn sync-btn" title="Đồng bộ lịch học">
+          <span class="button-text">Sync lịch</span>
+        </button>
+        <button id="downloadBtn" class="new-action-btn download-btn" title="Tải xuống">
+          <span class="button-text">Tải</span>
+        </button>
+        <button id="clearBtn" class="new-action-btn clear-btn" title="Xoá lịch học">
+          <span class="button-text">Xoá</span>
+        </button>
+      </div>
     </div>
 
     <!-- Filter Modal -->
@@ -94,7 +96,7 @@
     </div>
 
     <footer class="popup-footer">
-      <p>I 💛 FPTU • Phát triển bởi <a href="https://github.com/yunkhngn" target="_blank">@yunkhngn</a> • <a href="https://github.com/yunkhngn/fptu-examination" target="_blank">GitHub</a></p>
+      <p>I 💛 FPTU • Phát triển bởi <a href="https://github.com/yunkhngn" target="_blank">@yunkhngn</a> • <a href="https://github.com/yunkhngn/fptu-examination" target="_blank">GitHub</a> • <a href="https://yunkhngn.github.io/fptu-examination/" target="_blank">Hướng dẫn</a></p>
     </footer>
 
     <script src="sanitize-utils.js"></script>
